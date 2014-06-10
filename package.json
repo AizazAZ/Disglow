@@ -9,13 +9,14 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "lodash.bind": "^2.4.1",
+    "lodash.merge": "*",
     "glob2base": "0.0.9",
     "gulp": "^3.8.0",
     "gulp-livereload": "*",
     "gulp-sass": "^0.7.2",
     "gulp-svg-sprites": "^0.1.2",
     "gulp-uglify": "^0.3.0",
-    "lodash.bind": "^2.4.1",
     "string_decoder": "~0.10.x",
     "tiny-lr": "0.0.7"
   }
