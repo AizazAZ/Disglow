@@ -17,6 +17,8 @@
     "gulp-sass": "^0.7.2",
     "gulp-svg-sprites": "^0.1.2",
     "gulp-uglify": "^0.3.0",
+    "gulp-concat": "*",
+    "gulp-rename": "*",
     "string_decoder": "~0.10.x",
     "tiny-lr": "0.0.7"
   }
