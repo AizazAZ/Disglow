@@ -54,11 +54,27 @@ gulp.task('png', function() {
 		.pipe(spritesmith({
 			imgName: 'sprite-png.png',
 			styleName: '_png-sprites.scss',
-			imgPath: '../images/sprites/sprite-png.png'
+			imgPath: '../images/sprites/sprite-png.png',
+			styleTemplate: 'assets/images/png-sprites/css.template.mustache'
 		}))
 		.pipe(gulpif('*.png', gulp.dest('public_html/assets/images/sprites')))
 		.pipe(gulpif('*.scss', gulp.dest('assets/scss')))
 		.pipe(livereload({ auto: false }));
+
+});
+
+gulp.task('png-retina', function() {
+	return gulp.src('assets/images/png-sprites-retina/*.png')
+		.pipe(spritesmith({
+			imgName: 'sprite-png-retina.png',
+			styleName: '_png-sprites-retina.scss',
+			imgPath: '../images/sprites/sprite-png-retina.png',
+			styleTemplate: 'assets/images/png-sprites-retina/retina.template.mustache'
+		}))
+		.pipe(gulpif('*.png', gulp.dest('public_html/assets/images/sprites')))
+		.pipe(gulpif('*.scss', gulp.dest('assets/scss')))
+		.pipe(livereload({ auto: false }));
+
 });
 
 gulp.task('lint', function() {
@@ -77,6 +93,8 @@ gulp.task('watch', function() {
 	createWatcher('assets/scss/', 'scss', 1000);
 	createWatcher('assets/js/', 'js', 1000);
 	createWatcher('assets/images/svg-sprites/', 'svg', 1000);
+	createWatcher('assets/images/png-sprites/', 'png', 1000);
+	createWatcher('assets/images/png-sprites-retina/', 'png-retina', 1000);
 });
 
 
