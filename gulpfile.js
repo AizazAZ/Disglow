@@ -5,11 +5,19 @@ var uglify = require('gulp-uglify');
 var rename = require('gulp-rename');
 var svgSprites = require('gulp-svg-sprites');
 var livereload = require('gulp-livereload');
+var prefix = require('gulp-autoprefixer');
+var gargoyle = require('gargoyle');
+var spritesmith = require("gulp-spritesmith");
+var gulpif = require("gulp-if");
+
 var LIVERELOAD_PORT = 35729;
 
-gulp.task('default', ['lint', 'sass', 'js']);
+var svg = svgSprites.svg;
+var png = svgSprites.png;
 
-gulp.task('sass', function() {
+gulp.task('default', ['lint', 'scss', 'js']);
+
+gulp.task('scss', function() {
 	return gulp.src('assets/scss/*.scss')
 		.pipe(sass())
 		.pipe(gulp.dest('public_html/assets/css'))
@@ -26,16 +34,65 @@ gulp.task('js', function() {
 	.pipe(livereload({ auto: false }));
 });
 
+gulp.task('svg', function() {
+	return gulp.src('assets/images/svg-sprites/*.svg')
+		.pipe(svg({
+			padding:10,
+			generatePreview: false,
+			cssFile: '../../../assets/scss/_sprites.scss',
+			svgPath:   "../images/%f",
+			pngPath:   "../images/%f",
+			className: ".sprite-%f"
+		}))
+		.pipe(gulp.dest("public_html/assets/images"))
+		.pipe(png())
+		.pipe(livereload({ auto: false }));
+});
+
+gulp.task('png', function() {
+	return gulp.src('assets/images/png-sprites/*.png')
+		.pipe(spritesmith({
+			imgName: 'sprite-png.png',
+			styleName: '_png-sprites.scss',
+			imgPath: '../images/sprites/sprite-png.png'
+		}))
+		.pipe(gulpif('*.png', gulp.dest('public_html/assets/images/sprites')))
+		.pipe(gulpif('*.scss', gulp.dest('assets/scss')))
+		.pipe(livereload({ auto: false }));
+});
+
 gulp.task('lint', function() {
 	
 });
 
 gulp.task('production', function() {
-	
+	//Auto prefix
+	//.pipe(prefix("last 1 version", "> 1%", "ie 8", "ie 7"))
+	//Minimise css
+	//Uglify javascript
 });
 
 gulp.task('watch', function() {
 	livereload.listen(LIVERELOAD_PORT);
-	gulp.watch('assets/js/*.js', ['js']);
-	gulp.watch('assets/scss/*.scss', ['sass']);
+	createWatcher('assets/scss/', 'scss', 1000);
+	createWatcher('assets/js/', 'js', 1000);
+	createWatcher('assets/images/svg-sprites/', 'svg', 1000);
 });
+
+
+function createWatcher(glob, taskName, poll){
+	var options = {
+		type: 'watchFile',
+		interval: poll
+	};
+	gargoyle.monitor(glob, options, function(err, monitor) {
+		if (err) {
+			console.error(err);
+			return;
+		}
+		monitor.on('modify', function(filename) {gulp.start(taskName);});
+		monitor.on('delete', function(filename) {gulp.start(taskName);});
+		monitor.on('create', function(filename) {gulp.start(taskName);});
+	});
+}
+

@@ -9,17 +9,23 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "lodash.bind": "^2.4.1",
-    "lodash.merge": "*",
+    "gargoyle": "^0.3.5",
+    "gaze": "0.6.4",
     "glob2base": "0.0.9",
     "gulp": "^3.8.0",
+    "gulp-autoprefixer": "*",
+    "gulp-concat": "*",
     "gulp-livereload": "*",
+    "gulp-rename": "*",
     "gulp-sass": "^0.7.2",
     "gulp-svg-sprites": "^0.1.2",
     "gulp-uglify": "^0.3.0",
-    "gulp-concat": "*",
-    "gulp-rename": "*",
+    "gulp-watch": "*",
+    "lodash.bind": "^2.4.1",
+    "lodash.merge": "*",
     "string_decoder": "~0.10.x",
-    "tiny-lr": "0.0.7"
+    "tiny-lr": "0.0.7",
+    "gulp-spritesmith": "*",
+    "gulp-if": "*"
   }
 }
