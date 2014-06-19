@@ -1,2 +1,1 @@
-var i = 1;
-var g = 2;
+var i = 1, j = 2, k = 2;

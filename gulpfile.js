@@ -9,6 +9,7 @@ var prefix = require('gulp-autoprefixer');
 var gargoyle = require('gargoyle');
 var spritesmith = require("gulp-spritesmith");
 var gulpif = require("gulp-if");
+var complexity = require('gulp-complexity');
 
 var LIVERELOAD_PORT = 35729;
 
@@ -78,7 +79,16 @@ gulp.task('png-retina', function() {
 });
 
 gulp.task('lint', function() {
-	
+	//Tasks for checking whether code is good or not
+	return gulp.src([
+		'assets/js/global.js',
+		'assets/js/objects/*.js'
+	])
+	.pipe(complexity({
+		hideComplexFunctions: false,
+		errorsOnly: false,
+		breakOnErrors: false
+	}));
 });
 
 gulp.task('production', function() {
