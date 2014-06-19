@@ -40,7 +40,7 @@ gulp.task('svg', function() {
 		.pipe(svg({
 			padding:10,
 			generatePreview: false,
-			cssFile: '../../../assets/scss/_sprites.scss',
+			cssFile: '../../../assets/scss/_svg-sprites.scss',
 			svgPath:   "../images/%f",
 			pngPath:   "../images/%f",
 			className: ".sprite-%f"
