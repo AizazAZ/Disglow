@@ -27,6 +27,7 @@ gulp.task('scss', function() {
 
 gulp.task('js', function() {
 	return gulp.src([
+		'assets/js/vendor/*.js',
 		'assets/js/global.js',
 		'assets/js/objects/*.js'
 	])
