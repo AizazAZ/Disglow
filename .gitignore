@@ -8,3 +8,10 @@ composer.lock
 Thumbs.db
 node_modules
 ._*
+public_html/assets/js/script.js
+public_html/assets/css/styles.css
+public_html/assets/css/styles-ie.css
+public_html/assets/images/sprites
+assets/scss/_png-sprites.scss
+assets/scss/_png-sprites-retina.scss
+assets/scss/_sprites.scss
