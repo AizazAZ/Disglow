@@ -10,6 +10,7 @@ var gargoyle = require('gargoyle');
 var spritesmith = require("gulp-spritesmith");
 var gulpif = require("gulp-if");
 var complexity = require('gulp-complexity');
+var plumber = require('gulp-plumber');
 
 var LIVERELOAD_PORT = 35729;
 
@@ -20,6 +21,7 @@ gulp.task('default', ['lint', 'scss', 'js']);
 
 gulp.task('scss', function() {
 	return gulp.src('assets/scss/*.scss')
+		.pipe(plumber({ errorHandler: handleError }))
 		.pipe(sass())
 		.pipe(gulp.dest('public_html/assets/css'))
 		.pipe(livereload({ auto: false }));
@@ -30,14 +32,16 @@ gulp.task('js', function() {
 		'assets/js/vendor/*.js',
 		'assets/js/global.js',
 		'assets/js/objects/*.js'
-	])
-	.pipe(concat('script.js'))
-	.pipe(gulp.dest('./public_html/assets/js'))
-	.pipe(livereload({ auto: false }));
+		])
+		.pipe(plumber({ errorHandler: handleError }))
+		.pipe(concat('script.js'))
+		.pipe(gulp.dest('./public_html/assets/js'))
+		.pipe(livereload({ auto: false }));
 });
 
 gulp.task('svg', function() {
 	return gulp.src('assets/images/svg-sprites/*.svg')
+		.pipe(plumber({ errorHandler: handleError }))
 		.pipe(svg({
 			padding:10,
 			generatePreview: false,
@@ -53,6 +57,7 @@ gulp.task('svg', function() {
 
 gulp.task('png', function() {
 	return gulp.src('assets/images/png-sprites/*.png')
+		.pipe(plumber({ errorHandler: handleError }))
 		.pipe(spritesmith({
 			imgName: 'sprite-png.png',
 			styleName: '_png-sprites.scss',
@@ -67,6 +72,7 @@ gulp.task('png', function() {
 
 gulp.task('png-retina', function() {
 	return gulp.src('assets/images/png-sprites-retina/*.png')
+		.pipe(plumber({ errorHandler: handleError }))
 		.pipe(spritesmith({
 			imgName: 'sprite-png-retina.png',
 			styleName: '_png-sprites-retina.scss',
@@ -85,6 +91,7 @@ gulp.task('lint', function() {
 		'assets/js/global.js',
 		'assets/js/objects/*.js'
 	])
+	.pipe(plumber({ errorHandler: handleError }))
 	.pipe(complexity({
 		hideComplexFunctions: false,
 		errorsOnly: false,
@@ -123,5 +130,10 @@ function createWatcher(glob, taskName, poll){
 		monitor.on('delete', function(filename) {gulp.start(taskName);});
 		monitor.on('create', function(filename) {gulp.start(taskName);});
 	});
+}
+
+function handleError(err) {
+    console.log(err.toString());
+    this.emit('end');
 }
 
