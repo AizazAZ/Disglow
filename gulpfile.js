@@ -17,7 +17,7 @@ var LIVERELOAD_PORT = 35729;
 var svg = svgSprites.svg;
 var png = svgSprites.png;
 
-gulp.task('default', ['lint', 'scss', 'js']);
+gulp.task('default', ['png', 'png-retina', 'scss', 'js', 'watch']);
 
 gulp.task('scss', function() {
 	return gulp.src('assets/scss/*.scss')
