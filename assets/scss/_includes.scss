@@ -4,11 +4,3 @@
 @import "png-sprites";
 @import "png-sprites-retina";
 //@import "svg-sprites";
-
-.something{
-	@extend .sprite-sdsdf;
-	&:hover{
-		@extend .sprite-iconmonstr-drop-3-icon;
-		
-	}
-}

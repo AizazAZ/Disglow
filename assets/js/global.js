@@ -1,1 +1,1 @@
-var i = 1, j = 2, k = 2;
+var pager = new Pager('.internal-link', function(){}, function(){});
