@@ -1,10 +1,8 @@
 @extends('templates/master')
 
-@section('meta')
-	<title>A Title - HOME</title>
-    <meta name="description" content="A Description - HOME">
-    <meta name="keywords" content="home,keywords">
-@stop
+@section('meta_title', $pageTitle)
+@section('meta_description', $pageDescription)
+	
 
 @section('content')
 	@if (Input::get('pagefragment', false) === 'fragment1')

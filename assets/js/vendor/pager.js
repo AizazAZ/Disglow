@@ -7,6 +7,7 @@ function Pager(selector, pageChangeCallback, pageChangeErrorCallback) {
 	this.currentAJAX = null;
 	this.backFragment = null;
 	this.currentStateNum = 0;
+	this.justInstantiated = true;
 	
 
 	$('body').on('click', selector, function(e){
@@ -29,22 +30,38 @@ function Pager(selector, pageChangeCallback, pageChangeErrorCallback) {
 
 	//Bind to popstate here
 	$(window).on("popstate", function(e) {
-		console.log('Firing pop', e.originalEvent);
-		//FIXME: NEED TO FIND A WAY TO DETECT FIRST PAGE LOAD NOW BECAUSE STATE IS NO LONGER NULL
+		console.log('Firing pop', e.originalEvent.state);
+		
 		if (e.originalEvent.state !== null) {
-			//console.log(e.originalEvent.state);
-	    	parentPager.changePage(location.href, {}, parentPager.backFragment, false);
-	    	parentPager.backFragment = e.originalEvent.state.fragment;
+			if(e.originalEvent.state.isFirst && parentPager.justInstantiated){
+				//Pop on forward to home
+			}else{
+				if(parentPager.currentStateNum > e.originalEvent.state.stateNum){
+					console.log('going back');
+		    		parentPager.changePage(location.href, {}, parentPager.backFragment, false, e.originalEvent.state.stateNum);
+		    		parentPager.backFragment = e.originalEvent.state.fragment;
+				}else{
+					console.log('going forward');
+					parentPager.changePage(location.href, {}, e.originalEvent.state.fragment, false, e.originalEvent.state.stateNum);
+					parentPager.backFragment = e.originalEvent.state.fragment;
+				}
+			}
+		    
 	    }
+		parentPager.justInstantiated = false;
 	});
 
-	history.replaceState({fragment:'main-wrapper', stateNum:parentPager.currentStateNum}, "", window.location);	
+	history.replaceState({fragment:'main-wrapper', stateNum:parentPager.currentStateNum, isFirst:true}, "", window.location);	
 
 } 
 
-Pager.prototype.changePage = function(url, statedata, fragment, performPush){
+Pager.prototype.changePage = function(url, statedata, fragment, performPush, stateId){
 
 	var parentPager = this;
+
+	if(typeof stateId == 'undefined'){
+		var stateId = parentPager.currentStateNum+1;
+	}
 
 	//If older browser just navigate
 	if(!Modernizr.history){
@@ -53,8 +70,8 @@ Pager.prototype.changePage = function(url, statedata, fragment, performPush){
 	}
 
 	//Abort any other page changes currently occuring
-	if(this.currentAJAX!==null){
-		this.currentAJAX.abort();
+	if(parentPager.currentAJAX!==null){
+		parentPager.currentAJAX.abort();
 	}
 
 	var requestURL = url;
@@ -65,18 +82,30 @@ Pager.prototype.changePage = function(url, statedata, fragment, performPush){
 	}
 
 	statedata.fragment = fragment;
-	//statedata.stateNum = parentPager.currentStateNum+1;
+	statedata.isFirst = false;
+	statedata.stateNum = stateId;
 
 	//Get the URL from the server
-	this.currentAJAX = $.get(requestURL).done(function(data){
+	parentPager.currentAJAX = $.get(requestURL).done(function(data){
 		//If no errors occured do a push state
-		this.currentAJAX = null;
+		var newPage = parentPager.currentAJAX.getResponseHeader('X-Custom-Page');
+		if(typeof newPage != 'undefined'){
+			$('body').attr('id', 'page-'+newPage);
+		}
+
+		var newTitle = parentPager.currentAJAX.getResponseHeader('X-Custom-Title');
+		if(typeof newTitle != 'undefined'){
+			document.title = newTitle;
+		}
+
+		parentPager.currentAJAX.currentAJAX = null;
+
 
 		if(performPush){
 			console.log('Firing push', statedata, url);
 			history.pushState(statedata, "", url);	
-			//parentPager.currentStateNum = statedata.stateNum;
 		}
+		parentPager.currentStateNum = statedata.stateNum;
 		
 		$('body').find('[data-pagefragment="'+fragment+'"]').html(data);
 

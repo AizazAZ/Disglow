@@ -8,7 +8,10 @@
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 		
-		@include('meta/generic')
+		<title>@yield('meta_title', 'The Default Title')</title>
+		<meta name="description" content="@yield('meta_description', 'The Default Description')">
+		<meta name="keywords" content="@yield('meta_keywords', 'the,default,keywords')" />
+		
 		{{-- @include('meta/facebook') --}}
 		{{-- @include('meta/twitter') --}}
 		
@@ -24,7 +27,7 @@
 
 		<script src="assets/js/vendor/modernizr-2.6.2.min.js"></script>
 	</head>
-	<body data-pagefragment="body">
+	<body data-pagefragment="body" id="page-{{  $pageName }}">
 		@include('templates/commontop')
 
 @endif
