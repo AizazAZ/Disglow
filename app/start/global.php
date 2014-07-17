@@ -1,5 +1,7 @@
 <?php
 
+use Retrofuzz\ErrorHandlers\SlackHandler;
+
 /*
 |--------------------------------------------------------------------------
 | Register The Laravel Class Loader
@@ -32,6 +34,9 @@ ClassLoader::addDirectories(array(
 */
 
 Log::useFiles(storage_path().'/logs/laravel.log');
+$monolog = Log::getMonolog();
+$monolog->pushHandler(new SlackHandler('xoxp-2245945673-2410320785-2468152940-d59f51','C02DR3TLK',Config::get('app.url')));
+//Log::critical("A critical error has occured in a web site!!!!!");
 
 /*
 |--------------------------------------------------------------------------

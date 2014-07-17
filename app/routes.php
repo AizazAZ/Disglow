@@ -11,6 +11,10 @@
 |
 */
 
+Event::listen('illuminate.query', function($query){
+		//Log::info($query);
+});
+
 
 Route::get('/', [
 	'as' => 'home', 
