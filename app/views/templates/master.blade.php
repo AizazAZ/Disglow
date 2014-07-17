@@ -27,7 +27,7 @@
 
 		<script src="assets/js/vendor/modernizr-2.6.2.min.js"></script>
 	</head>
-	<body data-pagefragment="body" id="page-{{  $pageName }}">
+	<body data-pagefragment="body" id="page-{{  $pageName }}" ng-app="app">
 		@include('templates/commontop')
 
 @endif
@@ -39,7 +39,12 @@
 		@include('templates/commonbottom')
 
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.15/angular.min.js"></script>
+		<script src="https://code.angularjs.org/1.3.0-beta.15/angular-animate.min.js"></script>
+
+
 		<script src="assets/js/script.js"></script>
+		<script src="assets/js/app.js"></script>
 
 		<script>
 			(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=

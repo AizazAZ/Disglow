@@ -103,13 +103,14 @@ Pager.prototype.changePage = function(url, statedata, fragment, performPush, sta
 
 		if(performPush){
 			console.log('Firing push', statedata, url);
-			history.pushState(statedata, "", url);	
+			history.pushState(statedata, "", url);
 		}
 		parentPager.currentStateNum = statedata.stateNum;
 		
-		$('body').find('[data-pagefragment="'+fragment+'"]').html(data);
+		var toUpdate = $('body').find('[data-pagefragment="'+fragment+'"]');
+		toUpdate.html(data);
 
-		parentPager.pageChangeCallback();
+		parentPager.pageChangeCallback(toUpdate.get(0));
 
 	}).fail(function(jqXHR, status){
 		if(status!='abort'){
