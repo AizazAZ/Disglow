@@ -14,7 +14,7 @@ var plumber = require('gulp-plumber');
 var ngAnnotate = require('gulp-ng-annotate');
 
 var LIVERELOAD_PORT = 35729;
-var ASSETS_FOLDER = 'assets/';
+var ASSETS_FOLDER = 'assets';
 
 var svg = svgSprites.svg;
 var png = svgSprites.png;
@@ -22,68 +22,68 @@ var png = svgSprites.png;
 gulp.task('default', ['png', 'png-retina', 'scss', 'js']);
 
 gulp.task('scss', function() {
-	return gulp.src(ASSETS_FOLDER+'scss/*.scss')
+	return gulp.src('assets/scss/*.scss')
 		.pipe(plumber({ errorHandler: handleError }))
 		.pipe(sass())
-		.pipe(gulp.dest('public_html/'+ASSETS_FOLDER+'css'))
+		.pipe(gulp.dest('public_html/'+ASSETS_FOLDER+'/css'))
 		.pipe(livereload({ auto: false }));
 });
 
 gulp.task('js', function() {
 	return gulp.src([
-		ASSETS_FOLDER+'js/vendor/*.js',
-		ASSETS_FOLDER+'js/global.js',
-		ASSETS_FOLDER+'js/objects/*.js'
+		'assets/js/vendor/*.js',
+		'assets/js/global.js',
+		'assets/js/objects/*.js'
 		])
 		.pipe(plumber({ errorHandler: handleError }))
 		.pipe(ngAnnotate())
 		.pipe(concat('script.js'))
-		.pipe(gulp.dest('./public_html/'+ASSETS_FOLDER+'js'))
+		.pipe(gulp.dest('./public_html/'+ASSETS_FOLDER+'/js'))
 		.pipe(livereload({ auto: false }));
 });
 
 gulp.task('svg', function() {
-	return gulp.src(ASSETS_FOLDER+'images/svg-sprites/*.svg')
+	return gulp.src('assets/images/svg-sprites/*.svg')
 		.pipe(plumber({ errorHandler: handleError }))
 		.pipe(svg({
 			padding:10,
 			generatePreview: false,
-			cssFile: '../../../'+ASSETS_FOLDER+'scss/_svg-sprites.scss',
+			cssFile: '../../../assets/scss/_svg-sprites.scss',
 			svgPath:   "../images/%f",
 			pngPath:   "../images/%f",
 			className: ".sprite-%f"
 		}))
-		.pipe(gulp.dest('public_html/'+ASSETS_FOLDER+'images'))
+		.pipe(gulp.dest("public_html/'+ASSETS_FOLDER+'/images"))
 		.pipe(png())
 		.pipe(livereload({ auto: false }));
 });
 
 gulp.task('png', function() {
-	return gulp.src(ASSETS_FOLDER+'images/png-sprites/*.png')
+	return gulp.src('assets/images/png-sprites/*.png')
 		.pipe(plumber({ errorHandler: handleError }))
 		.pipe(spritesmith({
 			imgName: 'sprite-png.png',
 			styleName: '_png-sprites.scss',
 			imgPath: '../images/sprites/sprite-png.png',
-			styleTemplate: ASSETS_FOLDER+'images/png-sprites/css.template.mustache'
+			styleTemplate: 'assets/images/png-sprites/css.template.mustache'
 		}))
-		.pipe(gulpif('*.png', gulp.dest('public_html/'+ASSETS_FOLDER+'images/sprites')))
-		.pipe(gulpif('*.scss', gulp.dest(ASSETS_FOLDER+'scss')))
+		.pipe(gulpif('*.png', gulp.dest('public_html/'+ASSETS_FOLDER+'/images/sprites')))
+		.pipe(gulpif('*.scss', gulp.dest('assets/scss')))
 		.pipe(livereload({ auto: false }));
 
 });
 
 gulp.task('png-retina', function() {
-	return gulp.src(ASSETS_FOLDER+'images/png-sprites-retina/*.png')
+	return gulp.src('assets/images/png-sprites-retina/*.png')
 		.pipe(plumber({ errorHandler: handleError }))
 		.pipe(spritesmith({
 			imgName: 'sprite-png-retina.png',
 			styleName: '_png-sprites-retina.scss',
 			imgPath: '../images/sprites/sprite-png-retina.png',
-			styleTemplate: ASSETS_FOLDER+'images/png-sprites-retina/retina.template.mustache'
+			styleTemplate: 'assets/images/png-sprites-retina/retina.template.mustache'
 		}))
-		.pipe(gulpif('*.png', gulp.dest('public_html/'+ASSETS_FOLDER+'images/sprites')))
-		.pipe(gulpif('*.scss', gulp.dest(ASSETS_FOLDER+'scss')))
+		.pipe(gulpif('*.png', gulp.dest('public_html/'+ASSETS_FOLDER+'/images/sprites')))
+		.pipe(gulpif('*.scss', gulp.dest('assets/scss')))
 		.pipe(livereload({ auto: false }));
 
 });
@@ -91,8 +91,8 @@ gulp.task('png-retina', function() {
 gulp.task('lint', function() {
 	//Tasks for checking whether code is good or not
 	return gulp.src([
-		ASSETS_FOLDER+'js/global.js',
-		ASSETS_FOLDER+'js/objects/*.js'
+		'assets/js/global.js',
+		'assets/js/objects/*.js'
 	])
 	.pipe(plumber({ errorHandler: handleError }))
 	.pipe(complexity({
@@ -111,12 +111,12 @@ gulp.task('production', function() {
 
 gulp.task('watch', function() {
 	livereload.listen(LIVERELOAD_PORT);
-	createWatcher(ASSETS_FOLDER+'scss/', 'scss', 1000);
-	createWatcher(ASSETS_FOLDER+'js/', 'js', 1000);
-	//createWatcher(ASSETS_FOLDER'angular', 'ngmin', 1000);
-	createWatcher(ASSETS_FOLDER+'images/svg-sprites/', 'svg', 1000);
-	createWatcher(ASSETS_FOLDER+'images/png-sprites/', 'png', 1000);
-	createWatcher(ASSETS_FOLDER+'images/png-sprites-retina/', 'png-retina', 1000);
+	createWatcher('assets/scss/', 'scss', 1000);
+	createWatcher('assets/js/', 'js', 1000);
+	//createWatcher('assets/angular', 'ngmin', 1000);
+	createWatcher('assets/images/svg-sprites/', 'svg', 1000);
+	createWatcher('assets/images/png-sprites/', 'png', 1000);
+	createWatcher('assets/images/png-sprites-retina/', 'png-retina', 1000);
 });
 
 

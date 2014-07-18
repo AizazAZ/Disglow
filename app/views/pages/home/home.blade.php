@@ -22,7 +22,6 @@
 	    	@include('pages/home/fragments/fragment1')
 	    </div>
 
-
 	    <h2>Angular Examples</h2>
 	    <div class="test" ng-controller="ExampleController">
 			<button ng-click="aFunction()">Click Me!</button>
@@ -34,6 +33,11 @@
 		    </form>
 
 		</div>
+
+		<h2>Imager.js Examples</h2>
+
+		
+		<div style="width:100%;height:300px;background-size:cover;" class="delayed-image-load" data-src="http://placehold.it/{width}" data-bgmode="true" data-alt="alternative text"></div>
 
 
     @endif

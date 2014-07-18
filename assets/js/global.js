@@ -20,22 +20,32 @@ app.config(function($interpolateProvider) {
 	$interpolateProvider.endSymbol('%>');
 });
 
-/*
-|
-| MAKE THE PAGER WORK
-|
-*/
-var pager = new Pager('.internal-link', function(fragmentParent){
-	//Page change started
-}, function(fragmentParent){
-	//Page change successful
-	if(app){
-		var injector = $('[ng-app]').injector();
-		var $compile = injector.get('$compile');
-		var $rootScope = injector.get('$rootScope');
-		$compile(fragmentParent)($rootScope);
-		$rootScope.$digest();
-	}
-}, function(){
-	//Page change failed!
+$(document).ready(function(){
+	
+
+	/*
+	|
+	| MAKE THE PAGER WORK
+	|
+	*/
+	var pager = new Pager('.internal-link', function(fragmentParent){
+		//Page change started
+	}, function(fragmentParent){
+		//Page change successful
+		if(app){
+			var injector = $('[ng-app]').injector();
+			var $compile = injector.get('$compile');
+			var $rootScope = injector.get('$rootScope');
+			$compile(fragmentParent)($rootScope);
+			$rootScope.$digest();
+		}
+
+		new Imager({ availableWidths: [200, 260, 320, 400, 500, 600] });
+		
+	}, function(){
+		//Page change failed!
+	});
+
+	new Imager({ availableWidths: [200, 260, 320, 400, 500, 600] });
+
 });

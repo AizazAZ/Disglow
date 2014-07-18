@@ -1,1 +1,2 @@
-Fragment 2 Content
+Fragment 2 Content<br />
+<div style="width:100%;height:300px;background-size:cover;" class="delayed-image-load" data-src="http://placehold.it/{width}" data-bgmode="true" data-alt="alternative text"></div>
