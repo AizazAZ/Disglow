@@ -36,11 +36,7 @@
 
 @if (Input::get('pagefragment', false) === false)
 
-
-
 		@include('templates/commonbottom')
-		{{ cdn('js/script.js') }}
-
 
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.15/angular.min.js"></script>
@@ -48,7 +44,6 @@
 		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.15/angular-touch.min.js"></script>
 
 		<script src="{{ cdn('js/script.js') }}"></script>
-
 
 	@if (App::environment('production'))
 		<script>
@@ -64,7 +59,6 @@
 	@if (!App::environment('production'))
 		<script src="//fuzzdev:35729/livereload.js?snipver=1" async></script>
 	@endif
-
 
 	</body>
 </html>
