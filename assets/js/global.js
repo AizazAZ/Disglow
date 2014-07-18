@@ -1,3 +1,13 @@
+/*
+|
+| CONSOLE STUB FOR OLD BROWSERS
+|
+*/
+if(!this.console){
+	this.console = function(){
+		this.log = this.alert = this.info = this.error = function(){};
+	}
+}
 
 /*
 |
@@ -10,9 +20,15 @@ app.config(function($interpolateProvider) {
 	$interpolateProvider.endSymbol('%>');
 });
 
-
-
+/*
+|
+| MAKE THE PAGER WORK
+|
+*/
 var pager = new Pager('.internal-link', function(fragmentParent){
+	//Page change started
+}, function(fragmentParent){
+	//Page change successful
 	if(app){
 		var injector = $('[ng-app]').injector();
 		var $compile = injector.get('$compile');
@@ -20,4 +36,6 @@ var pager = new Pager('.internal-link', function(fragmentParent){
 		$compile(fragmentParent)($rootScope);
 		$rootScope.$digest();
 	}
-}, function(){});
+}, function(){
+	//Page change failed!
+});

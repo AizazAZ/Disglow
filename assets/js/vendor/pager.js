@@ -1,7 +1,8 @@
-function Pager(selector, pageChangeCallback, pageChangeErrorCallback) { 
+function Pager(selector, pageChangeBeginCallback, pageChangeCallback, pageChangeErrorCallback) { 
 
 	var parentPager = this;
 
+	this.pageChangeBeginCallback = pageChangeBeginCallback;
 	this.pageChangeCallback = pageChangeCallback;
 	this.pageChangeErrorCallback = pageChangeErrorCallback;
 	this.currentAJAX = null;
@@ -30,18 +31,18 @@ function Pager(selector, pageChangeCallback, pageChangeErrorCallback) {
 
 	//Bind to popstate here
 	$(window).on("popstate", function(e) {
-		console.log('Firing pop', e.originalEvent.state);
+		log.info('Firing pop', e.originalEvent.state);
 		
 		if (e.originalEvent.state !== null) {
 			if(e.originalEvent.state.isFirst && parentPager.justInstantiated){
 				//Pop on forward to home
 			}else{
 				if(parentPager.currentStateNum > e.originalEvent.state.stateNum){
-					console.log('going back');
+					log.info('going back');
 		    		parentPager.changePage(location.href, {}, parentPager.backFragment, false, e.originalEvent.state.stateNum);
 		    		parentPager.backFragment = e.originalEvent.state.fragment;
 				}else{
-					console.log('going forward');
+					log.info('going forward');
 					parentPager.changePage(location.href, {}, e.originalEvent.state.fragment, false, e.originalEvent.state.stateNum);
 					parentPager.backFragment = e.originalEvent.state.fragment;
 				}
@@ -74,6 +75,13 @@ Pager.prototype.changePage = function(url, statedata, fragment, performPush, sta
 		parentPager.currentAJAX.abort();
 	}
 
+	var toUpdate = $('body').find('[data-pagefragment="'+fragment+'"]');
+	if(toUpdate.size()==0){
+		log.error('Invalid fragment name provided');
+		return;
+	}
+	parentPager.pageChangeBeginCallback(toUpdate.get(0));
+
 	var requestURL = url;
 	if(requestURL.indexOf('?')!=-1){
 		requestURL = requestURL+'&pagefragment='+fragment;
@@ -102,12 +110,12 @@ Pager.prototype.changePage = function(url, statedata, fragment, performPush, sta
 
 
 		if(performPush){
-			console.log('Firing push', statedata, url);
+			log.info('Firing push', statedata, url);
 			history.pushState(statedata, "", url);
 		}
 		parentPager.currentStateNum = statedata.stateNum;
 		
-		var toUpdate = $('body').find('[data-pagefragment="'+fragment+'"]');
+		
 		toUpdate.html(data);
 
 		parentPager.pageChangeCallback(toUpdate.get(0));

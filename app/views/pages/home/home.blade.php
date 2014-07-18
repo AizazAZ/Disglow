@@ -22,11 +22,19 @@
 	    	@include('pages/home/fragments/fragment1')
 	    </div>
 
+
 	    <h2>Angular Examples</h2>
 	    <div class="test" ng-controller="ExampleController">
 			<button ng-click="aFunction()">Click Me!</button>
-			<p><% someVariable %></p>
+			<p ng-cloak><% someVariable %></p>
+
+		    <form class="sdf" method="get" action="/" ng-submit="formSubmit($event)">
+				<input type="text" name="test" ng-minlength="5"><br/>
+				<input type="submit" value="Test">
+		    </form>
+
 		</div>
+
 
     @endif
 @stop
