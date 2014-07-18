@@ -22,4 +22,9 @@ return array(
 	
 	'url' => 'http://'.$folder.'.fuzzdev.com',
 
+	'cdn' => array(
+		//"cdn.umg3.net/artistsite/" => "" //UMG weird cdn
+		//"cdn.websitename.com/assets/" => "" //A normal cdn, assets should match assets_folder above
+	),
+
 );

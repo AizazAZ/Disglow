@@ -28,6 +28,35 @@ return array(
 
 	'url' => 'http://localhost',
 
+
+	/*
+	|--------------------------------------------------------------------------
+	| Assets Folder
+	|--------------------------------------------------------------------------
+	|
+	| The name of the assets folder. Can be changed to cdn if required.
+	|
+	*/
+
+	'assets_folder' => 'assets/',
+
+	/*
+	|--------------------------------------------------------------------------
+	| CDN URLs
+	|--------------------------------------------------------------------------
+	|
+	| This array is used to define a number of CDNs which can be used for 
+	| different file types. Any assets will simply be appended to the url
+	| provided below. File types which do not match any CDN will use the 
+	| last CDN in the array.
+	|
+	*/
+
+	'cdn' => array(
+		//"cdn.umg3.net/artistsite/" => "" //UMG weird cdn
+		//"cdn.websitename.com/assets/" => "" //A normal cdn, assets should match assets_folder above
+	),
+
 	/*
 	|--------------------------------------------------------------------------
 	| Application Timezone

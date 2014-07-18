@@ -18,14 +18,14 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0">
 
 		<!--[if lte IE 8]>
-		<link rel="stylesheet" href="/assets/css/styles-ie.css">
+		<link rel="stylesheet" href="{{ cdn('css/styles-ie.css') }}">
 		<![endif]-->
 		<!--[if gt IE 8]><!-->
-		<link rel="stylesheet" href="/assets/css/styles.css">
+		<link rel="stylesheet" href="{{ cdn('css/styles.css') }}">
 		<!--<![endif]-->
 		
 
-		<script src="assets/js/vendor/modernizr-2.6.2.min.js"></script>
+		<script src="{{ cdn('js/vendor/modernizr-2.6.2.min.js') }}"></script>
 	</head>
 	<body data-pagefragment="body" id="page-{{  $pageName }}" ng-app="app">
 		@include('templates/commontop')
@@ -36,14 +36,18 @@
 
 @if (Input::get('pagefragment', false) === false)
 
+
+
 		@include('templates/commonbottom')
+		{{ cdn('js/script.js') }}
+
 
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.15/angular.min.js"></script>
 		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.15/angular-animate.min.js"></script>
 		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.15/angular-touch.min.js"></script>
 
-		<script src="assets/js/script.js"></script>
+		<script src="{{ cdn('js/script.js') }}"></script>
 
 
 	@if (App::environment('production'))
