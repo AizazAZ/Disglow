@@ -1,7 +1,5 @@
 <?php
 
-use Retrofuzz\ErrorHandlers\SlackHandler;
-
 /*
 |--------------------------------------------------------------------------
 | Register The Laravel Class Loader
@@ -34,9 +32,24 @@ ClassLoader::addDirectories(array(
 */
 
 Log::useFiles(storage_path().'/logs/laravel.log');
-$monolog = Log::getMonolog();
-$monolog->pushHandler(new SlackHandler('xoxp-2245945673-2410320785-2468152940-d59f51','C02DR3TLK',Config::get('app.url')));
-//Log::critical("A critical error has occured in a web site!!!!!");
+
+/*
+| Only send logs to slack from the production environment
+*/
+if(App::environment()=='production'){
+	$monolog = Log::getMonolog();
+	$slackHandler = new Retrofuzz\ErrorHandlers\SlackHandler('xoxp-2245945673-2410320785-2468152940-d59f51','C02DR3TLK',Config::get('app.url'));
+	$monolog->pushHandler($slackHandler);
+}
+
+/*
+| Only log SQL queries in dev mode
+*/
+if(Config::get('app.debug')){
+	Event::listen('illuminate.query', function($query){
+		Log::info($query);
+	});
+}
 
 /*
 |--------------------------------------------------------------------------
