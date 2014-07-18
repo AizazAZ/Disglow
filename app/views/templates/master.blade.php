@@ -39,13 +39,14 @@
 		@include('templates/commonbottom')
 
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.15/angular.min.js"></script>
-		<script src="https://code.angularjs.org/1.3.0-beta.15/angular-animate.min.js"></script>
-
+		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.15/angular.min.js"></script>
+		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.15/angular-animate.min.js"></script>
+		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.15/angular-touch.min.js"></script>
 
 		<script src="assets/js/script.js"></script>
-		<script src="assets/js/app.js"></script>
 
+
+	@if (App::environment('production'))
 		<script>
 			(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
 			function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
@@ -54,8 +55,12 @@
 			r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
 			ga('create','UA-XXXXX-X');ga('send','pageview');
 		</script>
+	@endif
 
+	@if (!App::environment('production'))
 		<script src="//fuzzdev:35729/livereload.js?snipver=1" async></script>
+	@endif
+
 
 	</body>
 </html>

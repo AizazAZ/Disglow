@@ -1,3 +1,17 @@
+
+/*
+|
+| BOOT ANGULAR
+|
+*/
+var app = angular.module('app', ['ngAnimate']);
+app.config(function($interpolateProvider) {
+	$interpolateProvider.startSymbol('<%');
+	$interpolateProvider.endSymbol('%>');
+});
+
+
+
 var pager = new Pager('.internal-link', function(fragmentParent){
 	if(app){
 		var injector = $('[ng-app]').injector();

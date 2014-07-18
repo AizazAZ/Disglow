@@ -11,7 +11,7 @@ var spritesmith = require("gulp-spritesmith");
 var gulpif = require("gulp-if");
 var complexity = require('gulp-complexity');
 var plumber = require('gulp-plumber');
-var ngmin = require('gulp-ngmin');
+var ngAnnotate = require('gulp-ng-annotate');
 
 var LIVERELOAD_PORT = 35729;
 
@@ -35,6 +35,7 @@ gulp.task('js', function() {
 		'assets/js/objects/*.js'
 		])
 		.pipe(plumber({ errorHandler: handleError }))
+		.pipe(ngAnnotate())
 		.pipe(concat('script.js'))
 		.pipe(gulp.dest('./public_html/assets/js'))
 		.pipe(livereload({ auto: false }));
@@ -100,16 +101,6 @@ gulp.task('lint', function() {
 	}));
 });
 
-gulp.task('ngmin', function() {
-	return gulp.src('assets/angular/**/*.js')
-		.pipe(plumber({ errorHandler: handleError }))
-		.pipe(concat('app.js'))
-		.pipe(ngmin())
-		.pipe(uglify())
-		.pipe(gulp.dest('./public_html/assets/js'))
-		.pipe(livereload({ auto: false }));
-});
-
 gulp.task('production', function() {
 	//Auto prefix
 	//.pipe(prefix("last 1 version", "> 1%", "ie 8", "ie 7"))
@@ -121,7 +112,7 @@ gulp.task('watch', function() {
 	livereload.listen(LIVERELOAD_PORT);
 	createWatcher('assets/scss/', 'scss', 1000);
 	createWatcher('assets/js/', 'js', 1000);
-	createWatcher('assets/angular', 'ngmin', 1000);
+	//createWatcher('assets/angular', 'ngmin', 1000);
 	createWatcher('assets/images/svg-sprites/', 'svg', 1000);
 	createWatcher('assets/images/png-sprites/', 'png', 1000);
 	createWatcher('assets/images/png-sprites-retina/', 'png-retina', 1000);
