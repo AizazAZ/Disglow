@@ -8,19 +8,26 @@ class PagesController extends BaseController{
 		$this->resp = $resp;
 	}
 
-	public function home(){
+	public function examples($name = false){
 
-		$pageTitle = 'Home Page Title';
-		$pageDescription = 'This is a description of the home page';
-		$pageName = 'home';
+		$pageTitle = 'Example Page Title';
+		$pageDescription = 'This is a description of the example page';
+		$pageName = 'examples';
 
-		$users = DB::table('test')->paginate(5);
+		if($name!==false){
+			$firstExample = Example::where('name', '=', $name)->first();
+		} else {
+			$firstExample = Example::all()->first();
+		}
 
-		$response = Response::view('pages/home/home', [
+		$examples = Example::paginate(5);
+
+		$response = Response::view('pages/examples/examples', [
 			'pageTitle' => $pageTitle,
 			'pageDescription' => $pageDescription,
 			'pageName' => $pageName,
-			'users' => $users
+			'examples' => $examples,
+			'firstExample' => $firstExample
 			], 200, [
 			'X-Custom-Page' => $pageName,
 			'X-Custom-Title' => $pageTitle
@@ -28,5 +35,6 @@ class PagesController extends BaseController{
 
 		return $response;
 	}
+
 
 }

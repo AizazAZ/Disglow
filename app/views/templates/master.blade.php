@@ -24,7 +24,7 @@
 		<!--<![endif]-->
 		
 
-		<script src="{{ cdn('js/vendor/modernizr-2.6.2.min.js') }}"></script>
+		<script src="{{ cdn('js/vendor/modernizr.min.js') }}"></script>
 	</head>
 	<body data-pagefragment="body" id="page-{{  $pageName }}" ng-app="app">
 		@include('templates/commontop')
@@ -40,20 +40,20 @@
 
 		<script src="{{ cdn('js/script.js') }}"></script>
 
-	@if (App::environment('production'))
-		<script>
-			(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
-			function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
-			e=o.createElement(i);r=o.getElementsByTagName(i)[0];
-			e.src='//www.google-analytics.com/analytics.js';
-			r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
-			ga('create','UA-XXXXX-X');ga('send','pageview');
-		</script>
-	@endif
+		@if (App::environment('production'))
+			<script>
+				(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+				function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+				e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+				e.src='//www.google-analytics.com/analytics.js';
+				r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+				ga('create','UA-XXXXX-X');ga('send','pageview');
+			</script>
+		@endif
 
-	@if (!App::environment('production'))
-		<script src="//fuzzdev:35729/livereload.js?snipver=1" async></script>
-	@endif
+		@if (!App::environment('production'))
+			<script src="//fuzzdev:35729/livereload.js?snipver=1" async></script>
+		@endif
 
 	</body>
 </html>

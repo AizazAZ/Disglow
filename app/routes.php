@@ -13,12 +13,12 @@
 
 
 Route::get('/', [
-	'as' => 'home', 
-	'uses' => 'PagesController@home'
+	'as' => 'examples', 
+	'uses' => 'PagesController@examples'
 	]);
 
-
-Route::get('/somepage', [
-	'as' => 'home', 
-	'uses' => 'PagesController@home'
+Route::get('/{name}', [
+	'as' => 'exampleItem', 
+	'uses' => 'PagesController@examples'
 	]);
+
