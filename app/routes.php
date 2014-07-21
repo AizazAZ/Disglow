@@ -16,3 +16,9 @@ Route::get('/', [
 	'as' => 'home', 
 	'uses' => 'PagesController@home'
 	]);
+
+
+Route::get('/somepage', [
+	'as' => 'home', 
+	'uses' => 'PagesController@home'
+	]);

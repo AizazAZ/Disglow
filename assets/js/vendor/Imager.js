@@ -166,6 +166,25 @@
         });
     }
 
+    Imager.prototype.update = function(){
+        var mainObj = this;
+        applyEach(this.divs, function(element, i){
+            if(typeof element == 'undefined' || element.parentNode == null){
+                mainObj.divs.splice(i, 1);
+            }
+        });
+
+        var newDivs = applyEach(document.querySelectorAll(mainObj.selector), returnDirectValue);
+        applyEach(newDivs, function(element, i){
+            if(mainObj.divs.indexOf(element) == -1){
+                mainObj.divs.push(element);
+            }
+        });    
+
+        this.checkImagesNeedReplacing(this.divs);    
+
+    };
+
     Imager.prototype.scrollCheck = function(){
         if (this.scrolled) {
             if (!this.imagesOffScreen.length) {

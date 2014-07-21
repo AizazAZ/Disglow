@@ -1,4 +1,3 @@
-@if (Input::get('pagefragment', false) === false)
 <!DOCTYPE html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
@@ -30,11 +29,7 @@
 	<body data-pagefragment="body" id="page-{{  $pageName }}" ng-app="app">
 		@include('templates/commontop')
 
-@endif
-
 		@yield('content')
-
-@if (Input::get('pagefragment', false) === false)
 
 		@include('templates/commonbottom')
 
@@ -62,4 +57,3 @@
 
 	</body>
 </html>
-@endif

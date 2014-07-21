@@ -5,7 +5,7 @@
 */
 if(!this.console){
 	this.console = function(){
-		this.log = this.alert = this.info = this.error = function(){};
+		this.log = this.alert = this.info = this.error = this.debug = function(){};
 	}
 }
 
@@ -32,6 +32,8 @@ $(document).ready(function(){
 		//Page change started
 	}, function(fragmentParent){
 		//Page change successful
+
+		//Start up any new angular objects
 		if(app){
 			var injector = $('[ng-app]').injector();
 			var $compile = injector.get('$compile');
@@ -40,12 +42,13 @@ $(document).ready(function(){
 			$rootScope.$digest();
 		}
 
-		new Imager({ availableWidths: [200, 260, 320, 400, 500, 600] });
+		window.imager.update();
+		console.log(window.imager.divs);
 		
 	}, function(){
 		//Page change failed!
 	});
 
-	new Imager({ availableWidths: [200, 260, 320, 400, 500, 600] });
+	window.imager = new Imager({ lazyload: true, availableWidths: [200, 260, 320, 400, 500, 600] });
 
 });

@@ -113,7 +113,6 @@ gulp.task('watch', function() {
 	livereload.listen(LIVERELOAD_PORT);
 	createWatcher('assets/scss/', 'scss', 1000);
 	createWatcher('assets/js/', 'js', 1000);
-	//createWatcher('assets/angular', 'ngmin', 1000);
 	createWatcher('assets/images/svg-sprites/', 'svg', 1000);
 	createWatcher('assets/images/png-sprites/', 'png', 1000);
 	createWatcher('assets/images/png-sprites-retina/', 'png-retina', 1000);

@@ -14,10 +14,13 @@ class PagesController extends BaseController{
 		$pageDescription = 'This is a description of the home page';
 		$pageName = 'home';
 
+		$users = DB::table('test')->paginate(5);
+
 		$response = Response::view('pages/home/home', [
 			'pageTitle' => $pageTitle,
 			'pageDescription' => $pageDescription,
-			'pageName' => $pageName
+			'pageName' => $pageName,
+			'users' => $users
 			], 200, [
 			'X-Custom-Page' => $pageName,
 			'X-Custom-Title' => $pageTitle
