@@ -30,8 +30,11 @@ $(document).ready(function(){
 	*/
 	var pager = new Pager('.internal-link', function(fragmentParent){
 		//Page change started
+		log.info('Page change started');
+
 	}, function(fragmentParent){
 		//Page change successful
+		log.info('Page change success');
 
 		//Start up any new angular objects
 		if(app){
@@ -43,11 +46,20 @@ $(document).ready(function(){
 		}
 
 		window.imager.update();
-		console.log(window.imager.divs);
 		
 	}, function(){
 		//Page change failed!
+		log.info('Page change failed');
+
 	});
+
+	pager.setAnimations({
+		'fade' : function(container, newContent, callback){
+			$(container).fadeTo(300, 0, function(){
+				$(container).html(newContent).fadeTo(300, 1);
+			})
+		}
+	})
 
 	window.imager = new Imager({ lazyload: true, availableWidths: [200, 260, 320, 400, 500, 600] });
 

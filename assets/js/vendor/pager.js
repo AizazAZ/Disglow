@@ -13,6 +13,7 @@
 		this.backFragment = null;
 		this.currentStateNum = 0;
 		this.justInstantiated = true;
+		this.animations = {};
 		
 
 		$('body').on('click', selector, function(e){
@@ -23,6 +24,7 @@
 			var ajaxURL = $(this).attr('href');
 			var fragment = $(this).attr('data-loadfragment');
 			var doPush = $(this).attr('data-vetopush')===undefined;
+			var animation = $(this).attr('data-animation')||false;
 			if(typeof fragment == 'undefined'){
 				fragment = 'main-wrapper';
 			}
@@ -30,7 +32,7 @@
 			if(typeof ajaxURL == 'undefined'){
 				return false;
 			}else{
-				parentPager.changePage(ajaxURL, {}, fragment, doPush);
+				parentPager.changePage(ajaxURL, {}, fragment, doPush, false, animation);
 			}
 		});
 
@@ -61,12 +63,20 @@
 
 	} 
 
-	Pager.prototype.changePage = function(url, statedata, fragment, performPush, stateId){
+	Pager.prototype.setAnimations = function(obj){
+		this.animations = obj;
+	}
+
+	Pager.prototype.changePage = function(url, statedata, fragment, performPush, stateId, animation){
 
 		var parentPager = this;
 
-		if(typeof stateId == 'undefined'){
+		if(typeof stateId == 'undefined' || stateId === false){
 			var stateId = parentPager.currentStateNum+1;
+		}
+
+		if(typeof animation == 'undefined' || animation === false){
+			var animation = 'swap';
 		}
 
 		//If older browser just navigate
@@ -120,10 +130,17 @@
 			}
 			parentPager.currentStateNum = statedata.stateNum;
 			
-			
-			toUpdate.html(data);
+			if(parentPager.animations.hasOwnProperty(animation)) {
+				log.info('Using animation: '+animation);
+				parentPager.animations[animation](toUpdate, data, function(){
+					parentPager.pageChangeCallback(toUpdate.get(0));
+				});
+			}else{
+				log.info('No animation set');
+				toUpdate.html(data);
+				parentPager.pageChangeCallback(toUpdate.get(0));
+			}
 
-			parentPager.pageChangeCallback(toUpdate.get(0));
 
 		}).fail(function(jqXHR, status){
 			if(status!='abort'){
