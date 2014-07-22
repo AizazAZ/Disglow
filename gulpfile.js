@@ -53,7 +53,7 @@ gulp.task('svg', function() {
 			pngPath:   "../images/%f",
 			className: ".sprite-%f"
 		}))
-		.pipe(gulp.dest("public_html/'+ASSETS_FOLDER+'/images"))
+		.pipe(gulp.dest('public_html/'+ASSETS_FOLDER+'/images'))
 		.pipe(png())
 		.pipe(livereload({ auto: false }));
 });

@@ -3,13 +3,14 @@
 
 # TEAM
 
-    <name> -- <role> -- <twitter>
+    Retrofuzz -- http://www.retrofuzz.com
 
 # THANKS
 
-    <name>
+    PieMinister for making `Friday Payday Pieday` a thing
 
 # TECHNOLOGY COLOPHON
 
     HTML5, CSS3
-    jQuery, Modernizr
+    jQuery, Modernizr, Angular
+    Laravel
