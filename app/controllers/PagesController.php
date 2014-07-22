@@ -10,7 +10,7 @@ class PagesController extends BaseController{
 
 	public function examples($name = false){
 
-		$pageTitle = 'Example Page Title';
+		$pageTitle = $name.' Example Page Title';
 		$pageDescription = 'This is a description of the example page';
 		$pageName = 'examples';
 

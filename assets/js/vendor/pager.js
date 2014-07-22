@@ -116,19 +116,7 @@
 				$('body').attr('id', 'page-'+newPage);
 			}
 
-			var newTitle = parentPager.currentAJAX.getResponseHeader('X-Custom-Title');
-			if(typeof newTitle != 'undefined'){
-				document.title = newTitle;
-			}
-
 			parentPager.currentAJAX.currentAJAX = null;
-
-
-			if(performPush){
-				log.info('Firing push', statedata, url);
-				history.pushState(statedata, "", url);
-			}
-			parentPager.currentStateNum = statedata.stateNum;
 			
 			if(parentPager.animations.hasOwnProperty(animation)) {
 				log.info('Using animation: '+animation);
@@ -139,6 +127,17 @@
 				log.info('No animation set');
 				toUpdate.html(data);
 				parentPager.pageChangeCallback(toUpdate.get(0));
+			}
+			
+			if(performPush){
+				log.info('Firing push', statedata, url);
+				history.pushState(statedata, "", url);
+			}
+			parentPager.currentStateNum = statedata.stateNum;
+			
+			var newTitle = parentPager.currentAJAX.getResponseHeader('X-Custom-Title');
+			if(typeof newTitle != 'undefined'){
+				document.title = newTitle;
 			}
 
 
