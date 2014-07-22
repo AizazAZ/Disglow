@@ -151,8 +151,6 @@
           });
         }
 
-
-
         if (elements) {
             this.divs = applyEach(elements, returnDirectValue);
             this.selector = null;
@@ -167,6 +165,25 @@
             self.init();
         });
     }
+
+    Imager.prototype.update = function(){
+        var mainObj = this;
+        applyEach(this.divs, function(element, i){
+            if(typeof element == 'undefined' || element.parentNode == null){
+                mainObj.divs.splice(i, 1);
+            }
+        });
+
+        var newDivs = applyEach(document.querySelectorAll(mainObj.selector), returnDirectValue);
+        applyEach(newDivs, function(element, i){
+            if(mainObj.divs.indexOf(element) == -1){
+                mainObj.divs.push(element);
+            }
+        });    
+
+        this.checkImagesNeedReplacing(this.divs);    
+
+    };
 
     Imager.prototype.scrollCheck = function(){
         if (this.scrolled) {
@@ -203,7 +220,12 @@
         var elementClassName = element.getAttribute('data-class');
         var elementWidth = element.getAttribute('data-width');
         var bgMode = element.getAttribute('data-bgmode');
-        var gif = this.gif.cloneNode(false);
+        var gif;
+        if(bgMode==='true'){
+            gif = element;
+        }else{
+            gif = this.gif.cloneNode(false);
+        }
 
         if(bgMode&&bgMode=='true'){
             gif.setAttribute('data-bgmode', 'true');
@@ -220,7 +242,9 @@
         gif.setAttribute('data-src', element.getAttribute('data-src'));
         gif.setAttribute('alt', element.getAttribute('data-alt') || this.gif.alt);
 
-        element.parentNode.replaceChild(gif, element);
+        if(bgMode!=='true'){
+            element.parentNode.replaceChild(gif, element);
+        }
 
         return gif;
     };
@@ -280,7 +304,12 @@
     Imager.prototype.replaceImagesBasedOnScreenDimensions = function (image) {
         var computedWidth, src, naturalWidth;
 
-        naturalWidth = getNaturalWidth(image);
+        if(image.getAttribute('data-bgmode')=='true'){
+            naturalWidth = image.getAttribute('data-curWidth')||0;
+        }else{
+            naturalWidth = getNaturalWidth(image);
+        }
+
         computedWidth = typeof this.availableWidths === 'function' ? this.availableWidths(image)
                                                                    : this.determineAppropriateResolution(image);
 
@@ -289,11 +318,12 @@
         if (image.src !== this.gif.src && computedWidth <= naturalWidth) {
             return;
         }
+        image.setAttribute('data-curWidth', computedWidth);
 
         src = this.changeImageSrcToUseNewImageDimensions(image.getAttribute('data-src'), computedWidth);
 
         if(image.getAttribute('data-bgmode')=='true'){
-            image.style.backgroundImage = src;
+            image.style.backgroundImage = 'url('+src+')';
         }else{
             image.src = src;
         }

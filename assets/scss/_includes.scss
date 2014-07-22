@@ -5,9 +5,6 @@
 @import "png-sprites-retina";
 //@import "svg-sprites";
 
-.something{
-	@extend .sprite-sdsdf;
-	&:hover{
-		@extend .sprite-iconmonstr-drop-3-icon;
-	}
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none !important;
 }

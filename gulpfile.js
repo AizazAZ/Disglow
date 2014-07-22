@@ -11,19 +11,21 @@ var spritesmith = require("gulp-spritesmith");
 var gulpif = require("gulp-if");
 var complexity = require('gulp-complexity');
 var plumber = require('gulp-plumber');
+var ngAnnotate = require('gulp-ng-annotate');
 
 var LIVERELOAD_PORT = 35729;
+var ASSETS_FOLDER = 'assets';
 
 var svg = svgSprites.svg;
 var png = svgSprites.png;
 
-gulp.task('default', ['lint', 'scss', 'js']);
+gulp.task('default', ['png', 'png-retina', 'scss', 'js']);
 
 gulp.task('scss', function() {
 	return gulp.src('assets/scss/*.scss')
 		.pipe(plumber({ errorHandler: handleError }))
 		.pipe(sass())
-		.pipe(gulp.dest('public_html/assets/css'))
+		.pipe(gulp.dest('public_html/'+ASSETS_FOLDER+'/css'))
 		.pipe(livereload({ auto: false }));
 });
 
@@ -34,8 +36,9 @@ gulp.task('js', function() {
 		'assets/js/objects/*.js'
 		])
 		.pipe(plumber({ errorHandler: handleError }))
+		.pipe(ngAnnotate())
 		.pipe(concat('script.js'))
-		.pipe(gulp.dest('./public_html/assets/js'))
+		.pipe(gulp.dest('./public_html/'+ASSETS_FOLDER+'/js'))
 		.pipe(livereload({ auto: false }));
 });
 
@@ -50,7 +53,7 @@ gulp.task('svg', function() {
 			pngPath:   "../images/%f",
 			className: ".sprite-%f"
 		}))
-		.pipe(gulp.dest("public_html/assets/images"))
+		.pipe(gulp.dest("public_html/'+ASSETS_FOLDER+'/images"))
 		.pipe(png())
 		.pipe(livereload({ auto: false }));
 });
@@ -64,7 +67,7 @@ gulp.task('png', function() {
 			imgPath: '../images/sprites/sprite-png.png',
 			styleTemplate: 'assets/images/png-sprites/css.template.mustache'
 		}))
-		.pipe(gulpif('*.png', gulp.dest('public_html/assets/images/sprites')))
+		.pipe(gulpif('*.png', gulp.dest('public_html/'+ASSETS_FOLDER+'/images/sprites')))
 		.pipe(gulpif('*.scss', gulp.dest('assets/scss')))
 		.pipe(livereload({ auto: false }));
 
@@ -79,7 +82,7 @@ gulp.task('png-retina', function() {
 			imgPath: '../images/sprites/sprite-png-retina.png',
 			styleTemplate: 'assets/images/png-sprites-retina/retina.template.mustache'
 		}))
-		.pipe(gulpif('*.png', gulp.dest('public_html/assets/images/sprites')))
+		.pipe(gulpif('*.png', gulp.dest('public_html/'+ASSETS_FOLDER+'/images/sprites')))
 		.pipe(gulpif('*.scss', gulp.dest('assets/scss')))
 		.pipe(livereload({ auto: false }));
 

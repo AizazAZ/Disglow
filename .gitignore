@@ -14,4 +14,4 @@ public_html/assets/css/styles-ie.css
 public_html/assets/images/sprites
 assets/scss/_png-sprites.scss
 assets/scss/_png-sprites-retina.scss
-assets/scss/_sprites.scss
+assets/scss/_svg-sprites.scss

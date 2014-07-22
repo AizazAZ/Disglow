@@ -34,6 +34,24 @@ ClassLoader::addDirectories(array(
 Log::useFiles(storage_path().'/logs/laravel.log');
 
 /*
+| Only send logs to slack from the production environment
+*/
+if(App::environment()=='production'){
+	$monolog = Log::getMonolog();
+	$slackHandler = new Retrofuzz\ErrorHandlers\SlackHandler('xoxp-2245945673-2410320785-2468152940-d59f51','C02DR3TLK',Config::get('app.url'));
+	$monolog->pushHandler($slackHandler);
+}
+
+/*
+| Only log SQL queries in dev mode
+*/
+if(Config::get('app.debug')){
+	Event::listen('illuminate.query', function($query){
+		Log::info($query);
+	});
+}
+
+/*
 |--------------------------------------------------------------------------
 | Application Error Handler
 |--------------------------------------------------------------------------
@@ -64,7 +82,7 @@ App::error(function(Exception $exception, $code)
 
 App::down(function()
 {
-	return Response::make("Be right back!", 503);
+	return Response::view('other/maintenance', array(), 503);
 });
 
 /*

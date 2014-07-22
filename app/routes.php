@@ -11,7 +11,14 @@
 |
 */
 
-Route::get('/', function()
-{
-	return View::make('hello');
-});
+
+Route::get('/', [
+	'as' => 'examples', 
+	'uses' => 'PagesController@examples'
+	]);
+
+Route::get('/{name}', [
+	'as' => 'exampleItem', 
+	'uses' => 'PagesController@examples'
+	]);
+

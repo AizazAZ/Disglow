@@ -1,5 +1,10 @@
 <?php
 
+$path = explode('/',__DIR__);
+array_pop($path);
+array_pop($path);
+array_pop($path);
+$folder = $path[sizeof($path)-1];
 return array(
 
 	/*
@@ -14,5 +19,12 @@ return array(
 	*/
 
 	'debug' => true,
+	
+	'url' => 'http://'.$folder.'.fuzzdev.com',
+
+	'cdn' => array(
+		//"cdn.umg3.net/artistsite/" => "" //UMG weird cdn
+		//"cdn.websitename.com/assets/" => "" //A normal cdn, assets should match assets_folder above
+	),
 
 );
