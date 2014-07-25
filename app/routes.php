@@ -13,7 +13,7 @@
 
 
 Route::get('/', function(){
-	return "&#9786;";
+	return View::make('pages.home.home');
 });
 
 

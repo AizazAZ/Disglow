@@ -26,12 +26,12 @@
 
 		<script src="{{ cdn('js/vendor/modernizr.min.js') }}"></script>
 	</head>
-	<body data-pagefragment="body" id="page-{{  $pageName }}" ng-app="app">
-		@include('templates/commontop')
+	<body data-pagefragment="body" id="page-{{  isset($pageName)?$pageName:'default' }}" ng-app="app">
+		@include('templates.commontop')
 
 		@yield('content')
 
-		@include('templates/commonbottom')
+		@include('templates.commonbottom')
 
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.15/angular.min.js"></script>

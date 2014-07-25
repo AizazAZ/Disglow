@@ -69,6 +69,13 @@ App::error(function(Exception $exception, $code)
 	Log::error($exception);
 });
 
+
+App::missing(function($exception)
+{
+    return Response::view('other.fourohfour', array(), 404);
+});
+
+
 /*
 |--------------------------------------------------------------------------
 | Maintenance Mode Handler
@@ -82,7 +89,7 @@ App::error(function(Exception $exception, $code)
 
 App::down(function()
 {
-	return Response::view('other/maintenance', array(), 503);
+	return Response::view('other.maintenance', array(), 503);
 });
 
 /*
