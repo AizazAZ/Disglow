@@ -12,13 +12,8 @@
 */
 
 
-Route::get('/', [
-	'as' => 'examples', 
-	'uses' => 'PagesController@examples'
-	]);
+Route::get('/', function(){
+	return "&#9786;";
+});
 
-Route::get('/{name}', [
-	'as' => 'exampleItem', 
-	'uses' => 'PagesController@examples'
-	]);
 
