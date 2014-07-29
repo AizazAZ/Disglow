@@ -14,7 +14,7 @@ if(!this.console){
 | BOOT ANGULAR
 |
 */
-var app = angular.module('app', ['ngAnimate']);
+var app = angular.module('app', ['ngAnimate', 'ngTouch']);
 app.config(function($interpolateProvider) {
 	$interpolateProvider.startSymbol('<%');
 	$interpolateProvider.endSymbol('%>');
@@ -22,6 +22,13 @@ app.config(function($interpolateProvider) {
 
 $(document).ready(function(){
 	
+	/*
+	|
+	| MAKE OBJECT MANAGER WORK FOR LEGACY OBJECTS
+	|
+	*/
+	window.objectManager = new ObjectManager();
+	objectManager.initObjects();
 
 	/*
 	|
@@ -45,11 +52,12 @@ $(document).ready(function(){
 			$rootScope.$digest();
 		}
 
-		window.imager.update();
+		//Sort any new legacy objects
+		objectManager.initObjects(fragmentParent);
 		
 	}, function(){
 		//Page change failed!
-		log.info('Page change failed');
+		log.warn('Page change failed');
 
 	});
 
@@ -59,8 +67,6 @@ $(document).ready(function(){
 				$(container).html(newContent).fadeTo(300, 1);
 			})
 		}
-	})
-
-	window.imager = new Imager({ lazyload: true, availableWidths: [200, 260, 320, 400, 500, 600] });
+	});
 
 });
