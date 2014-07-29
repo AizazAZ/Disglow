@@ -14,11 +14,13 @@ if(!this.console){
 | BOOT ANGULAR
 |
 */
-var app = angular.module('app', ['ngAnimate', 'ngTouch']);
-app.config(function($interpolateProvider) {
-	$interpolateProvider.startSymbol('<%');
-	$interpolateProvider.endSymbol('%>');
-});
+if(typeof angular !== 'undefined'){
+	window.angularBase = angular.module('angularBase', ['ngAnimate', 'ngTouch']);
+	window.angularBase.config(function($interpolateProvider) {
+		$interpolateProvider.startSymbol('<%');
+		$interpolateProvider.endSymbol('%>');
+	});
+}
 
 $(document).ready(function(){
 	
@@ -36,15 +38,13 @@ $(document).ready(function(){
 	|
 	*/
 	var pager = new Pager('.internal-link', function(fragmentParent){
-		//Page change started
 		log.info('Page change started');
 
 	}, function(fragmentParent){
-		//Page change successful
 		log.info('Page change success');
 
 		//Start up any new angular objects
-		if(app){
+		if(window.angularBase){
 			var injector = $('[ng-app]').injector();
 			var $compile = injector.get('$compile');
 			var $rootScope = injector.get('$rootScope');
@@ -53,7 +53,9 @@ $(document).ready(function(){
 		}
 
 		//Sort any new legacy objects
-		objectManager.initObjects(fragmentParent);
+		if(window.objectManager){
+			objectManager.initObjects(fragmentParent);
+		}
 		
 	}, function(){
 		//Page change failed!

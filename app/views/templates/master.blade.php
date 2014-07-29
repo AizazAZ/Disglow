@@ -26,7 +26,7 @@
 
 		<script src="{{ cdn('js/vendor/modernizr.min.js') }}"></script>
 	</head>
-	<body data-pagefragment="body" id="page-{{  isset($pageName)?$pageName:'default' }}" ng-app="app">
+	<body data-pagefragment="body" id="page-{{  isset($pageName)?$pageName:'default' }}" ng-app="angularBase">
 		@include('templates.commontop')
 
 		@yield('content')
