@@ -11,8 +11,7 @@
 		<meta name="description" content="@yield('meta_description', 'The Default Description')">
 		<meta name="keywords" content="@yield('meta_keywords', 'the,default,keywords')" />
 		
-		{{-- @include('meta/facebook') --}}
-		{{-- @include('meta/twitter') --}}
+		@yield('meta_additional', '')
 		
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0">
 

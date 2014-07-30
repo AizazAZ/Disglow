@@ -11,7 +11,7 @@ if(!this.console){
 
 /*
 |
-| BOOT ANGULAR
+| BOOT ANGULAR IF IT EXISTS
 |
 */
 if(typeof angular !== 'undefined'){

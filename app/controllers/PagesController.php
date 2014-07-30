@@ -31,6 +31,7 @@ class PagesController extends BaseController{
 			], 200, [
 			'X-Custom-Page' => $pageName,
 			'X-Custom-Title' => $pageTitle
+
 			]);
 
 		return $response;
