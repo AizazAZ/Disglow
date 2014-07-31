@@ -23,7 +23,7 @@ return array(
 		'mysql' => array(
 			'driver'    => 'mysql',
 			'host'      => 'localhost',
-			'database'  => 'skeleton',
+			'database'  => 'wowhack2014',
 			'username'  => 'fuzzdev',
 			'password'  => 'fuzzdev',
 			'charset'   => 'utf8',

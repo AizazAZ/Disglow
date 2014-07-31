@@ -22,7 +22,43 @@ if(typeof angular !== 'undefined'){
 	});
 }
 
+var baseUrl = window.location.protocol + '//' + window.location.hostname;
+// var socket = io();
+var socket = io.connect(baseUrl + ':3000');
+var nickSet = false;
+var username = '';
+// socket.connect(baseUrl, { port: 3000 });
+
 $(document).ready(function(){
+
+	$('form').submit(function(){
+        if (nickSet){
+          socket.emit('chat message', $('#m').val());
+          postMessage($('#m').val(), 'ME');
+        }
+        else{
+          username = $('#m').val();
+          socket.emit('username', username);
+          nickSet = true;
+          $('#m').removeAttr('placeholder');
+        }
+        $('#m').val('');
+        return false;
+    });
+ 
+    socket.on('chat message', function(data){
+        // $('#messages').append($('<li>').text(msg));
+        postMessage(data.message, data.username);
+    });
+ 
+    socket.on('status message', function(msg){
+        // $('#messages').append($('<li>').text(msg));
+        postMessage(msg);
+    });
+ 
+    socket.on('username', function(username){
+        postMessage(username + ' just connected');
+    });
 	
 	/*
 	|
@@ -72,3 +108,11 @@ $(document).ready(function(){
 	});
 
 });
+
+function postMessage(msg, username){
+    var li = $('<li>').text(msg);
+    if (typeof username != 'undefined'){
+        li.prepend('<span class="username">' + username + '</span>: ');
+    }
+    $('#messages').append(li);
+}
