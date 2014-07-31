@@ -12,13 +12,6 @@
 */
 
 
-Route::get('/', [
-	'as' => 'examples', 
-	'uses' => 'PagesController@examples'
-	]);
-
-Route::get('/{name}', [
-	'as' => 'exampleItem', 
-	'uses' => 'PagesController@examples'
-	]);
-
+Route::get('/', function(){
+	return View::make('pages.home.home');
+});

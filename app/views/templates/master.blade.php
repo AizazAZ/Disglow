@@ -11,8 +11,7 @@
 		<meta name="description" content="@yield('meta_description', 'The Default Description')">
 		<meta name="keywords" content="@yield('meta_keywords', 'the,default,keywords')" />
 		
-		{{-- @include('meta/facebook') --}}
-		{{-- @include('meta/twitter') --}}
+		@yield('meta_additional', '')
 		
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0">
 
@@ -26,12 +25,12 @@
 
 		<script src="{{ cdn('js/vendor/modernizr.min.js') }}"></script>
 	</head>
-	<body data-pagefragment="body" id="page-{{  $pageName }}" ng-app="app">
-		@include('templates/commontop')
+	<body data-pagefragment="body" id="page-{{  isset($pageName)?$pageName:'default' }}" ng-app="angularBase">
+		@include('templates.commontop')
 
 		@yield('content')
 
-		@include('templates/commonbottom')
+		@include('templates.commonbottom')
 
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.15/angular.min.js"></script>

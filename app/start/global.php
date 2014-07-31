@@ -67,7 +67,26 @@ if(Config::get('app.debug')){
 App::error(function(Exception $exception, $code)
 {
 	Log::error($exception);
+	if(App::environment()=='production'){
+		return Response::view('other.error', array(), 500);
+	}
 });
+
+App::fatal(function($exception)
+{
+	Log::critical($exception); 
+	if(App::environment()=='production'){
+		return Response::view('other.error', array(), 500);
+	}
+});
+
+
+
+App::missing(function($exception)
+{
+    return Response::view('other.fourohfour', array(), 404);
+});
+
 
 /*
 |--------------------------------------------------------------------------
@@ -82,7 +101,7 @@ App::error(function(Exception $exception, $code)
 
 App::down(function()
 {
-	return Response::view('other/maintenance', array(), 503);
+	return Response::view('other.maintenance', array(), 503);
 });
 
 /*

@@ -11,17 +11,26 @@ if(!this.console){
 
 /*
 |
-| BOOT ANGULAR
+| BOOT ANGULAR IF IT EXISTS
 |
 */
-var app = angular.module('app', ['ngAnimate']);
-app.config(function($interpolateProvider) {
-	$interpolateProvider.startSymbol('<%');
-	$interpolateProvider.endSymbol('%>');
-});
+if(typeof angular !== 'undefined'){
+	window.angularBase = angular.module('angularBase', ['ngAnimate', 'ngTouch']);
+	window.angularBase.config(function($interpolateProvider) {
+		$interpolateProvider.startSymbol('<%');
+		$interpolateProvider.endSymbol('%>');
+	});
+}
 
 $(document).ready(function(){
 	
+	/*
+	|
+	| MAKE OBJECT MANAGER WORK FOR LEGACY OBJECTS
+	|
+	*/
+	window.objectManager = new ObjectManager();
+	objectManager.initObjects();
 
 	/*
 	|
@@ -29,15 +38,13 @@ $(document).ready(function(){
 	|
 	*/
 	var pager = new Pager('.internal-link', function(fragmentParent){
-		//Page change started
 		log.info('Page change started');
 
 	}, function(fragmentParent){
-		//Page change successful
 		log.info('Page change success');
 
 		//Start up any new angular objects
-		if(app){
+		if(window.angularBase){
 			var injector = $('[ng-app]').injector();
 			var $compile = injector.get('$compile');
 			var $rootScope = injector.get('$rootScope');
@@ -45,11 +52,14 @@ $(document).ready(function(){
 			$rootScope.$digest();
 		}
 
-		window.imager.update();
+		//Sort any new legacy objects
+		if(window.objectManager){
+			objectManager.initObjects(fragmentParent);
+		}
 		
 	}, function(){
 		//Page change failed!
-		log.info('Page change failed');
+		log.warn('Page change failed');
 
 	});
 
@@ -59,8 +69,6 @@ $(document).ready(function(){
 				$(container).html(newContent).fadeTo(300, 1);
 			})
 		}
-	})
-
-	window.imager = new Imager({ lazyload: true, availableWidths: [200, 260, 320, 400, 500, 600] });
+	});
 
 });

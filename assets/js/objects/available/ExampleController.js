@@ -3,7 +3,7 @@
 | An example controller which can be used as a base for JS objects
 |
 */
-app.controller('ExampleController', function($rootScope, $scope, $element) {
+window.angularBase.controller('ExampleController', function($rootScope, $scope, $element) {
 
 	//Set a scope variable
 	$scope.someVariable = 'Some Variable';
