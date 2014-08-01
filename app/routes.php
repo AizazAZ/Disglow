@@ -11,7 +11,13 @@
 |
 */
 
+Route::get('/', [
+	'as' => 'home',
+	'uses' => 'PartiesController@index'
+]);
 
-Route::get('/', function(){
-	return View::make('pages.home.chat');
-});
+Route::resource('parties', 'PartiesController');
+
+// Route::get('/', function(){
+// 	return View::make('pages.home.chat');
+// });

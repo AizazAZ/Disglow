@@ -33,6 +33,7 @@
   },
   "dependencies": {
     "express": "^4.7.2",
+    "mysql": "^2.4.1",
     "socket.io": "^1.0.6"
   }
 }

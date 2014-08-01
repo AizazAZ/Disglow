@@ -22,6 +22,9 @@ if(typeof angular !== 'undefined'){
 	});
 }
 
+// CONSTANTS
+var EVENT_JOIN_PARTY = 'party.join';
+
 var baseUrl = window.location.protocol + '//' + window.location.hostname;
 // var socket = io();
 var socket = io.connect(baseUrl + ':3000');
