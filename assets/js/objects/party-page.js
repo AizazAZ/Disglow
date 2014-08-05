@@ -10,7 +10,8 @@ initScripts['party-page'] = function(element) {
 		pollTimeout: null,
 		playingTrack: null,
 		startPlayback: startPlayback,
-		players: null
+		players: null,
+		playbackContext: null
 	};
 
 	// Connect to the party.
@@ -74,14 +75,21 @@ initScripts['party-page'] = function(element) {
 	function pollServer(){
 		var req = getRequestObject();
 		req.track = object.playingTrack;
+		
+		if (object.playbackContext) {
+			req.playbackPosition = object.playbackContext.currentTime;
+		}
+
+		console.log('Poll Server', req);
 
 		socket.emit(EVENT_DJ_POLL, req);
 	}
 
-	function startPlayback(track){
+	function startPlayback(playbackContext, track){
 		// Send the track URL to the server.
 		var req = getRequestObject();
 		req.track = track;
+		object.playbackContext = playbackContext;
 		object.playingTrack = track;
 		socket.emit(EVENT_DJ_SWITCH, req);
 	}
