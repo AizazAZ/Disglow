@@ -5,8 +5,9 @@
   <meta charset="utf-8">
 
   <title>DISGLOW</title>
-  <meta name="description" content="The HTML5 Herald">
-  <meta name="author" content="SitePoint">
+  <meta name="description" content="Share your music experience with others live.
+Listen together with any internet-enabled device.>
+  <meta name="author" content="RetroFuzz">
 
   <script type="text/javascript" src="//use.typekit.net/qls3yzb.js"></script>
   <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
