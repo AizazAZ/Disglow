@@ -18,7 +18,7 @@ return array(
 	|
 	*/
 
-	'debug' => false,
+	'debug' => true,
 	
 	'url' => 'http://'.$folder.'.rtrfz.com',
 
