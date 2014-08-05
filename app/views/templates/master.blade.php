@@ -15,6 +15,10 @@
 		
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0">
 
+  		<script type="text/javascript" src="//use.typekit.net/qls3yzb.js"></script>
+  		<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+
+
 		<!--[if lte IE 8]>
 		<link rel="stylesheet" href="{{ cdn('css/styles-ie.css') }}">
 		<![endif]-->
