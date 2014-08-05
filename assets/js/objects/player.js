@@ -243,7 +243,7 @@ Player.prototype.finishedLoading = function(bufferList) {
 
 
 Player.prototype.doPlayClick = function() {
-
+	
 	// Get the top track.
 	var track = this.queue()[0];
 
@@ -260,28 +260,29 @@ Player.prototype.doPlayClick = function() {
 
 Player.prototype.play = function(track) {
 	
+	var self = this;
 
-	// Buffer first track in queue then play.
+	// Buffer track in queue then play.
 
 
 	bufferLoader = new BufferLoader(
-		this.context, [track.preview], function(bufferList) {
+		self.context, [track.preview], function(bufferList) {
 
-			console.log('totes have a source lol', this.source);
+			console.log('totes have a source lol', self.source);
 
-			if (this.source) {
-				console.log('already source', this.source);
-				this.source.stop(0);
+			if (self.source) {
+				console.log('already source', self.source);
+				self.source.stop(0);
 			}
 
-			this.source = this.context.createBufferSource();
-			this.source.buffer = bufferList[0];
+			self.source = self.context.createBufferSource();
+			self.source.buffer = bufferList[0];
 
 			//source.connect(filter);
 			//filter.connect(context.destination);
-			this.source.connect(this.context.destination);
+			self.source.connect(self.context.destination);
 
-			this.source.start(0);
+			self.source.start(0);
 		}
 	);
 
