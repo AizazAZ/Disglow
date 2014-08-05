@@ -4,6 +4,7 @@ var EVENT_DJ_POLL = 'dj.poll';
 var EVENT_DJ_SWITCH = 'dj.switch';
 var EVENT_DJ_ASSIGN = 'dj.assign';
 var EVENT_LISTENER_SYNC = 'listener.sync';
+var EVENT_LISTENER_SWITCH = 'listener.switch';
 
 
 var app = require('express')();
@@ -87,6 +88,15 @@ function connection(socket){
 		if (socket.user.isDj){
 			req.partySlug = socket.user.currentParty;
 			socket.broadcast.emit(EVENT_LISTENER_SYNC, req);
+		}
+	});
+
+	socket.on(EVENT_DJ_SWITCH, function(req){
+		console.log('DJ switch', req);
+		// Ensure the user is in fact a DJ.
+		if (socket.user.isDj){
+			req.partySlug = socket.user.currentParty;
+			socket.broadcast.emit(EVENT_LISTENER_SWITCH, req);
 		}
 	});
 

@@ -8,7 +8,8 @@ initScripts['party-page'] = function(element) {
 		destroy: destroy,
 		isDj: false,
 		pollTimeout: null,
-		playingTrack: null
+		playingTrack: null,
+		startPlayback: startPlayback
 	};
 
 	// Connect to the party.
@@ -28,9 +29,38 @@ initScripts['party-page'] = function(element) {
 		}
     });
 
+	socket.on(EVENT_LISTENER_SYNC, function(req){
+		if (isListenerOfParty(req.partySlug)){
+			
+		}
+    });
+
+	socket.on(EVENT_LISTENER_SWITCH, function(req){
+		// Set the track.
+		if (typeof req.track == 'undefined'){
+			return;
+		}
+
+		if (isListenerOfParty(req.partySlug)){
+			console.log('Listener switch', req);
+
+			object.playingTrack = req.track;
+
+			if (object.playingTrack != null){
+				// Get the player and start playback!
+				var players = objectManager.getObjectsOfType('player');
+				for (var i = 0; i < players.length; i++) {
+					players[i].play(object.playingTrack);
+					console.log(players[i].play);
+				}
+			}
+		}
+    });
+
 	function setDj(){
 		object.isDj = true;
 		object.pollInterval = setInterval(pollServer, POLL_INTERVAL);
+		$(object.element).addClass('is-dj');
 	}
 
 	function pollServer(){
@@ -38,6 +68,17 @@ initScripts['party-page'] = function(element) {
 		req.trackId = object.playingTrack == null ? -1 : playingTrack.spotifyId
 
 		socket.emit(EVENT_DJ_POLL, req);
+	}
+
+	function startPlayback(track){
+		// Send the track URL to the server.
+		var req = getRequestObject();
+		req.track = track;
+		socket.emit(EVENT_DJ_SWITCH, req);
+	}
+
+	function isListenerOfParty(partySlug){
+		return partySlug == object.slug && !object.isDj;
 	}
 
 	function destroy(){

@@ -28,6 +28,7 @@ var EVENT_DJ_POLL = 'dj.poll';
 var EVENT_DJ_SWITCH = 'dj.switch';
 var EVENT_DJ_ASSIGN = 'dj.assign';
 var EVENT_LISTENER_SYNC = 'listener.sync';
+var EVENT_LISTENER_SWITCH = 'listener.switch';
 var POLL_INTERVAL = 1000;
 
 var baseUrl = window.location.protocol + '//' + window.location.hostname;

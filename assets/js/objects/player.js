@@ -4,7 +4,8 @@ initScripts['player'] = function(element) {
 	var object = {
 		type: "player",
 		element: element,
-		destroy: destroy
+		destroy: destroy,
+		play: play
 	};
 
 	console.log('Hello from player!!!!');
@@ -16,6 +17,9 @@ initScripts['player'] = function(element) {
 
 	player.init();
 	
+	function play(track){
+		player.play(track);
+	}
 
 	function destroy(){
 	}
@@ -238,14 +242,27 @@ Player.prototype.finishedLoading = function(bufferList) {
 };
 
 
-Player.prototype.play = function() {
-
-	var self = this;
+Player.prototype.doPlayClick = function() {
 	
-
-	// Buffer first track in queue then play.
-
+	// Get the top track.
 	var track = this.queue()[0];
+
+	// Inform the parties!
+	var partyPages = objectManager.getObjectsOfType('party-page');
+	for (var i = 0; i < partyPages.length; i++) {
+		partyPages[i].startPlayback(track);
+	}
+
+	// Play the track.
+	this.play(track);
+}
+
+
+Player.prototype.play = function(track) {
+	
+	var self = this;
+
+	// Buffer track in queue then play.
 
 
 	bufferLoader = new BufferLoader(
