@@ -50,23 +50,6 @@ function Player() {
 
 	this.context = null;
 
-	var self = this;
-
-
-	this.init = function() {
-
-		self.context = new AudioContext();
-		//var analyser = context.createAnalyser();
-
-		// Wait for window.onload to fire. See crbug.com/112368
-		//window.addEventListener('load', function(e) {
-
-		var filter = self.context.createBiquadFilter();
-		//filter.type = 0;
-		filter.type = 'lowpass';
-
-	};
-
 	this.query = ko.observable();
 
 	this.query.subscribe(function(newValue) {
@@ -81,6 +64,28 @@ function Player() {
 	this.queuePosition = 0;
 
 	this.source = null;
+
+	this.partyPages = null;
+
+
+
+	this.init = function() {
+
+		window.AudioContext = window.AudioContext||window.webkitAudioContext;
+
+		self.context = new AudioContext();
+		//var analyser = context.createAnalyser();
+
+		// Wait for window.onload to fire. See crbug.com/112368
+		//window.addEventListener('load', function(e) {
+
+		var filter = self.context.createBiquadFilter();
+		//filter.type = 0;
+		filter.type = 'lowpass';
+
+	};
+
+
 }
 
 
@@ -181,6 +186,7 @@ Player.track = function(data, player) {
 	this.name = data.name;
 	this.artist = data.artists[0].name;
 	this.preview = data.preview_url;
+	this.colour = randomHexColour();
 	// artist etc
 
 	this.add = function() {
@@ -230,27 +236,29 @@ function loadTrack(track) {
 }
 
 
-Player.prototype.finishedLoading = function(bufferList) {
+// Player.prototype.finishedLoading = function(bufferList) {
 
-	var source = context.createBufferSource();
+// 	var source = context.createBufferSource();
 
-	source.buffer = bufferList[0];
+// 	source.buffer = bufferList[0];
 
-	source.connect(context.destination);
+// 	source.connect(context.destination);
 
-	source.start(0);
-};
+// 	source.start(0);
+// };
 
 
 Player.prototype.doPlayClick = function() {
+
+	var self = this;
 	
 	// Get the top track.
 	var track = this.queue()[0];
 
 	// Inform the parties!
-	var partyPages = objectManager.getObjectsOfType('party-page');
-	for (var i = 0; i < partyPages.length; i++) {
-		partyPages[i].startPlayback(track);
+	self.partyPages = objectManager.getObjectsOfType('party-page');
+	for (var i = 0; i < self.partyPages.length; i++) {
+		self.partyPages[i].startPlayback(self.context, track);
 	}
 
 	// Play the track.
@@ -276,15 +284,27 @@ Player.prototype.play = function(track) {
 			self.source = self.context.createBufferSource();
 			self.source.buffer = bufferList[0];
 
+			console.log('source', self.source);
+			console.log('buffer', self.source.buffer);
+
 			//source.connect(filter);
 			//filter.connect(context.destination);
 			self.source.connect(self.context.destination);
 
-			self.source.addEventListener('ended', function() {
+			self.source.onended = function() {
 				console.log('sound ended');
-			});
+				self.queue()[0].remove();
+				self.doPlayClick();
+			};
 
 			self.source.start(0);
+
+			//setInterval(function() {
+
+				//console.log(self.context.currentTime);
+
+
+			//}, 100)
 
 			console.log(self.context);
 
@@ -304,11 +324,67 @@ Player.prototype.play = function(track) {
 };
 
 Player.prototype.stop = function() {
-	
+		
 
 };
 
 
+Player.prototype.nextTrack = function() {
+
+	var self = this;
+
+	/*if (self.queue().length > 1) {
+
+		var track = self.queue()[1];
+
+		bufferLoader = new BufferLoader(
+
+			self.context, [track.preview], function(bufferList) {
+
+				
+				var nextTrackInterval = setInterval(function() {
+	
+					if (self.context.currentTime - self.source.buffer.duration < 5) {
+						// Cross fade tracks
+					}
+
+				});
+
+				if (self.source) {
+					console.log('already source', self.source);
+					self.source.stop(0);
+				}
+
+				self.source = self.context.createBufferSource();
+				self.source.buffer = bufferList[0];
+
+				//source.connect(filter);
+				//filter.connect(context.destination);
+				self.source.connect(self.context.destination);
+
+				self.source.onended = function() {
+					console.log('sound ended');
+					self.queue()[0].remove();
+					self.doPlayClick();
+				};
+
+				self.source.start(0);
+
+				//setInterval(function() {
+
+					//console.log(self.context.currentTime);
+
+
+				//}, 100)
+
+				console.log(self.context);
+
+				
+			}
+		);
+	}*/
+
+};
 
 
 

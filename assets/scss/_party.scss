@@ -6,6 +6,12 @@
 	}
 }
 
+.party-page{
+	@include scut-clearfix;
+	background: white;
+	@include transition(background-color, 1000ms, ease-in-out);
+}
+
 .search-section{
 width: 49%;
 float: left;

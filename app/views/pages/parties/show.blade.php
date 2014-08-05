@@ -1,5 +1,7 @@
 @extends(Input::get('pagefragment', false) === false?'templates.master':'templates.ajax')
 
+@section('content')
+
 <div class="party-page" data-init="party-page" data-slug="{{ $party->slug }}">
 	
 <div class="section first">
@@ -47,10 +49,9 @@
 
 </div>
 
-
-
-
-
 		
 	</div>
 </div>
+
+@stop
+
