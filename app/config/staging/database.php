@@ -18,7 +18,7 @@ return array(
 	|
 	*/
 
-	'connections' => array( localhost
+	'connections' => array(
 		'mysql' => array(
 			'driver'    => 'mysql',
 			'host'      => 'localhost',
