@@ -26,3 +26,7 @@ Route::resource('parties', 'PartiesController');
 Route::get('/audio', function() {
 	return View::make('pages.audio.index');
 });
+
+Route::get('/', function(){
+	return View::make('pages.styles.index');
+});
