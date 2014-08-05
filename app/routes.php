@@ -15,3 +15,7 @@
 Route::get('/', function(){
 	return View::make('pages.home.chat');
 });
+
+Route::get('/', function(){
+	return View::make('pages.styles.index');
+});
