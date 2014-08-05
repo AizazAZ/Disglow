@@ -1,0 +1,23 @@
+.dj-only{
+	display: none;
+
+	.is-dj &{
+		display: block;
+	}
+}
+
+.party-page{
+	@include scut-clearfix;
+	background: white;
+	@include transition(background-color, 1000ms, ease-in-out);
+}
+
+.search-section{
+	width: 50%;
+	float: left;
+}
+
+.queue-section{
+	width: 50%;
+	float: right;
+}

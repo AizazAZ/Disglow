@@ -1,7 +1,7 @@
 {
-  "name": "skeleton",
-  "version": "0.0.0",
-  "description": "Skeleton app",
+  "name": "wowhack2014",
+  "version": "0.0.1",
+  "description": "WOW Hack 2014",
   "main": "index.js",
   "scripts": {
     "test": "test"
@@ -30,5 +30,11 @@
     "lodash.merge": "*",
     "string_decoder": "~0.10.x",
     "tiny-lr": "0.0.7"
+  },
+  "dependencies": {
+    "express": "^4.7.2",
+    "ng-annotate": "^0.9.9",
+    "mysql": "^2.4.2",
+    "socket.io": "^1.0.6"
   }
 }

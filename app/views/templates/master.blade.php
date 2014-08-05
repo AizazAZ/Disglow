@@ -32,6 +32,7 @@
 
 		@include('templates.commonbottom')
 
+		<script src="{{ URL::to('/') }}:3000/socket.io/socket.io.js"></script>
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.15/angular.min.js"></script>
 		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.15/angular-animate.min.js"></script>
