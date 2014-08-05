@@ -268,8 +268,6 @@ Player.prototype.play = function(track) {
 	bufferLoader = new BufferLoader(
 		self.context, [track.preview], function(bufferList) {
 
-			console.log('totes have a source lol', self.source);
-
 			if (self.source) {
 				console.log('already source', self.source);
 				self.source.stop(0);
@@ -282,7 +280,15 @@ Player.prototype.play = function(track) {
 			//filter.connect(context.destination);
 			self.source.connect(self.context.destination);
 
+			self.source.addEventListener('ended', function() {
+				console.log('sound ended');
+			});
+
 			self.source.start(0);
+
+			console.log(self.context);
+
+			
 		}
 	);
 
