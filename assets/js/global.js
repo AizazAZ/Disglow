@@ -36,8 +36,6 @@ var socket = io.connect(baseUrl + ':3000');
 
 $(document).ready(function(){
 
- 
-	
 	/*
 	|
 	| MAKE OBJECT MANAGER WORK FOR LEGACY OBJECTS
@@ -91,6 +89,10 @@ function getRequestObject(){
 	return {
 		time: getCurrentTime()
 	}
+}
+
+function isValidTrack(track){
+	return typeof track != 'undefined';
 }
 
 function postMessage(msg, username){

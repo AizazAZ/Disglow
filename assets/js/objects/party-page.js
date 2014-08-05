@@ -9,7 +9,8 @@ initScripts['party-page'] = function(element) {
 		isDj: false,
 		pollTimeout: null,
 		playingTrack: null,
-		startPlayback: startPlayback
+		startPlayback: startPlayback,
+		players: null
 	};
 
 	// Connect to the party.
@@ -24,20 +25,28 @@ initScripts['party-page'] = function(element) {
     });
 
 	socket.on(EVENT_LISTENER_SYNC, function(req){
-		if (req.partySlug == object.slug && !object.isDj){
-			console.log('Listener sync', req);
+		if (!isValidTrack(req.track)){
+			return;
 		}
-    });
 
-	socket.on(EVENT_LISTENER_SYNC, function(req){
 		if (isListenerOfParty(req.partySlug)){
-			
+			console.log('Listener sync', req);
+
+			// If no track is playing, start it playing.
+			if (object.playingTrack == null){
+				object.playingTrack = req.track;
+
+				var players = getPlayers();
+				for (var i = 0; i < players.length; i++) {
+					players[i].play(object.playingTrack);
+				}
+			}
 		}
     });
 
 	socket.on(EVENT_LISTENER_SWITCH, function(req){
-		// Set the track.
-		if (typeof req.track == 'undefined'){
+		console.log('Listener switch', req);
+		if (!isValidTrack(req.track)){
 			return;
 		}
 
@@ -48,10 +57,9 @@ initScripts['party-page'] = function(element) {
 
 			if (object.playingTrack != null){
 				// Get the player and start playback!
-				var players = objectManager.getObjectsOfType('player');
+				var players = getPlayers();
 				for (var i = 0; i < players.length; i++) {
 					players[i].play(object.playingTrack);
-					console.log(players[i].play);
 				}
 			}
 		}
@@ -65,7 +73,7 @@ initScripts['party-page'] = function(element) {
 
 	function pollServer(){
 		var req = getRequestObject();
-		req.trackId = object.playingTrack == null ? -1 : playingTrack.spotifyId
+		req.track = object.playingTrack;
 
 		socket.emit(EVENT_DJ_POLL, req);
 	}
@@ -74,11 +82,19 @@ initScripts['party-page'] = function(element) {
 		// Send the track URL to the server.
 		var req = getRequestObject();
 		req.track = track;
+		object.playingTrack = track;
 		socket.emit(EVENT_DJ_SWITCH, req);
 	}
 
 	function isListenerOfParty(partySlug){
 		return partySlug == object.slug && !object.isDj;
+	}
+
+	function getPlayers(){
+		if (object.players == null){
+			object.players = objectManager.getObjectsOfType('player');
+		}
+		return object.players;
 	}
 
 	function destroy(){
