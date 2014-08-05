@@ -106,3 +106,47 @@ function postMessage(msg, username){
 function getCurrentTime(){
 	return new Date().getTime();
 }
+
+
+// Colour functions
+function randomHexColour(){
+	return 'rgb(' + random255() + ', ' + random255() + ', ' + random255() + ')';
+}
+
+function colourToHex(colour) {
+    if (colour.substr(0, 1) === '#') {
+        return colour;
+    }
+    var digits = /(.*?)rgb\((\d+), (\d+), (\d+)\)/.exec(colour);
+
+    var red = parseInt(digits[2]);
+    var green = parseInt(digits[3]);
+    var blue = parseInt(digits[4]);
+
+    var rgb = blue | (green << 8) | (red << 16);
+    return digits[1] + '#' + rgb.toString(16);
+}
+
+function random255(){
+	return Math.floor(Math.random() * 255);
+}
+
+function colourLuminance(hex, lum) {
+
+	// validate hex string
+	hex = String(hex).replace(/[^0-9a-f]/gi, '');
+	if (hex.length < 6) {
+		hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
+	}
+	lum = lum || 0;
+
+	// convert to decimal and change luminosity
+	var rgb = "#", c, i;
+	for (i = 0; i < 3; i++) {
+		c = parseInt(hex.substr(i*2,2), 16);
+		c = Math.round(Math.min(Math.max(0, c + (c * lum)), 255)).toString(16);
+		rgb += ("00"+c).substr(c.length);
+	}
+
+	return rgb;
+}

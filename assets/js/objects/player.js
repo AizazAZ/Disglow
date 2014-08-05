@@ -181,7 +181,8 @@ Player.track = function(data, player) {
 	this.name = data.name;
 	this.artist = data.artists[0].name;
 	this.preview = data.preview_url;
-	// artist etc
+	this.colour = randomHexColour();
+;	// artist etc
 
 	this.add = function() {
 
