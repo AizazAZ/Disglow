@@ -281,9 +281,11 @@ Player.prototype.play = function(track) {
 			//filter.connect(context.destination);
 			self.source.connect(self.context.destination);
 
-			self.source.addEventListener('ended', function() {
+			self.source.onended = function() {
 				console.log('sound ended');
-			});
+				self.queue()[0].remove();
+				self.doPlayClick();
+			};
 
 			self.source.start(0);
 
