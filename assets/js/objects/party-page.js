@@ -10,7 +10,11 @@ initScripts['party-page'] = function(element) {
 		pollTimeout: null,
 		playingTrack: null,
 		startPlayback: startPlayback,
-		players: null
+		players: null,
+		visualiserInterval: null,
+		upperColour: '',
+		lowerColour: '',
+		onLowerColour: true
 	};
 
 	// Connect to the party.
@@ -61,6 +65,8 @@ initScripts['party-page'] = function(element) {
 				for (var i = 0; i < players.length; i++) {
 					players[i].play(object.playingTrack);
 				}
+
+				initVisualiser();
 			}
 		}
     });
@@ -84,6 +90,8 @@ initScripts['party-page'] = function(element) {
 		req.track = track;
 		object.playingTrack = track;
 		socket.emit(EVENT_DJ_SWITCH, req);
+
+		initVisualiser();
 	}
 
 	function isListenerOfParty(partySlug){
@@ -95,6 +103,26 @@ initScripts['party-page'] = function(element) {
 			object.players = objectManager.getObjectsOfType('player');
 		}
 		return object.players;
+	}
+
+	function initVisualiser(){
+		// Set up the visualiser.
+		if (object.visualiserInterval == null){
+			object.upperColour = colourLuminance(object.playingTrack.colour, COLOUR_FLUCTUATION);
+			object.lowerColour = colourLuminance(object.playingTrack.colour, (COLOUR_FLUCTUATION * -1));
+			visualiser();
+			visualiserInterval = setInterval(visualiser, VISUALISER_INTERVAL);
+		}
+	}
+
+	function visualiser(){
+		if (object.onLowerColour){
+			$(object.element).css('background-color', object.upperColour);
+		}
+		else{
+			$(object.element).css('background-color', object.lowerColour);
+		}
+		object.onLowerColour = !object.onLowerColour;
 	}
 
 	function destroy(){
