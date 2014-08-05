@@ -12,6 +12,34 @@ var http = require('http').Server(app);
 var mysql = require('mysql');
 var io = require('socket.io')(http);
 
+var conf = {};
+switch(process.env.NODE_ENV){
+	case 'development':
+	    conf = {
+	    	database: {
+				host     : 'localhost',
+				user     : 'fuzzdev',
+				password : 'fuzzdev',
+				database : 'wowhack2014'
+			}
+	    };
+	    break;
+	case 'staging':
+	    conf = {
+	    	database: {
+				host     : 'localhost',
+				user     : 'fuzzstaging',
+				password : 'orange man drills',
+				database : 'wowhack2014'
+			}
+	    };
+	    break;
+
+	default: {
+		blah: 'blah'
+	}
+}
+
 var parties = [];
 var partiesById = [];
 var partiesSlugs = [];
@@ -22,12 +50,11 @@ var currentId = 1;
 
 // Connect the database
 var db = mysql.createConnection({
-	host     : 'localhost',
-	user     : 'fuzzdev',
-	password : 'fuzzdev',
-	database : 'wowhack2014'
+	host     : conf.database.host,
+	user     : conf.database.user,
+	password : conf.database.password,
+	database : conf.database.database
 });
-
 
 // Set up the parties.
 db.query('SELECT id, name, slug FROM parties WHERE active = 1 ORDER BY created_at DESC', function(err, rows) {
