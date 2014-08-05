@@ -18,6 +18,11 @@ Route::get('/', [
 
 Route::resource('parties', 'PartiesController');
 
-// Route::get('/', function(){
-// 	return View::make('pages.home.chat');
-// });
+Route::get('/', function(){
+	return View::make('pages.home.chat');
+});
+
+
+Route::get('/audio', function() {
+	return View::make('pages.audio.index');
+});
