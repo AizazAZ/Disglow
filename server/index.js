@@ -72,8 +72,9 @@ function connection(socket){
 			// Connect them to the relevant room.
 			socket.join(party.slug);
 
-			if (party.connectedUsers.length == 0){
+			if (!party.hasDj){
 				// This user needs to be set as the DJ.
+				party.hasDj = true;
 				socket.user.isDj = true;
 				socket.emit(EVENT_DJ_ASSIGN, "");
 			}
@@ -105,6 +106,19 @@ function connection(socket){
 		connected--;
 		if (socket.user.currentParty != null){
 			socket.leave(socket.user.currentParty);
+
+			// Remove them from the connectedUsers list.
+			var party = getPartyBySlug(socket.user.currentParty);
+			var userIdx = party.connectedUsers.indexOf(socket.user);
+			if (userIdx > 0){
+				party.connectedUsers.splice(userIdx, 1);
+			}
+
+			// If they're the DJ, we need to set someone else as the DJ.
+			if (socket.user.isDj){
+				party.hasDj = false;
+				//TODO Maybe assign a new one!
+			}
 		}
 	});
 }
@@ -114,6 +128,7 @@ function addParty(partyId, partyName, partySlug){
 		id: partyId,
 		name: partyName,
 		slug: partySlug,
+		hasDj: false,
 		connectedUsers: []
 	}
 	parties.push(party);
