@@ -30,6 +30,7 @@ initScripts['party-page'] = function(element) {
     });
 
 	socket.on(EVENT_LISTENER_SYNC, function(req){
+		//console.log('Listener sync', req);
 		if (!isValidTrack(req.track)){
 			return;
 		}
@@ -86,7 +87,9 @@ initScripts['party-page'] = function(element) {
 			req.playbackPosition = object.playbackContext.currentTime;
 		}
 
-		console.log('Poll Server', req);
+		//console.log('Poll Server', req);
+
+		//console.log('Hi from poll server', req);
 
 		socket.emit(EVENT_DJ_POLL, req);
 	}
@@ -97,7 +100,11 @@ initScripts['party-page'] = function(element) {
 		req.track = track;
 		object.playbackContext = playbackContext;
 		object.playingTrack = track;
+
+		console.log('Hi from startplayback!!!');
 		socket.emit(EVENT_DJ_SWITCH, req);
+
+		console.log('Hi from startplayback!!!');
 
 		initVisualiser();
 	}
