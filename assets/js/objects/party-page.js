@@ -35,29 +35,33 @@ initScripts['party-page'] = function(element) {
     });
 
 	socket.on(EVENT_LISTENER_SYNC, function(req){
-		//console.log('Listener sync', req);
 		if (!isValidTrack(req.track)){
 			return;
 		}
 
 		if (isListenerOfParty(req.partySlug)){
-			//console.log('Listener sync', req);
+			console.log('Listener sync', req);
 
 			// If no track is playing, start it playing.
-			if (object.playingTrack == null){
+			if (object.playingTrack == null && typeof req.latency != undefined && req.latency != 0){
 				object.playingTrack = req.track;
+
+				console.log('req here is', req);
 
 				var players = getPlayers();
 				for (var i = 0; i < players.length; i++) {
 					console.log('trying to play client', req);
-					players[i].play(object.playingTrack, req.playbackPosition, req);
+					players[i].play(object.playingTrack, req);
+					console.log('latency in here', req.latency);
 				}
+
+				initVisualiser();
 			}
 		}
     });
 
 	socket.on(EVENT_LISTENER_SWITCH, function(req){
-		console.log('Listener switch', req);
+		// console.log('Listener switch', req);
 		if (!isValidTrack(req.track)){
 			return;
 		}
@@ -70,8 +74,9 @@ initScripts['party-page'] = function(element) {
 			if (object.playingTrack != null){
 				// Get the player and start playback!
 				var players = getPlayers();
+				console.log('going to play track');
 				for (var i = 0; i < players.length; i++) {
-					players[i].play(object.playingTrack);
+					players[i].play(object.playingTrack, req);
 				}
 
 				initVisualiser();

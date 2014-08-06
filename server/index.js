@@ -161,6 +161,7 @@ function connection(socket){
 			if (party != null){
 				req.partySlug = socket.user.currentParty;
 				req.latency = socket.user.latency + party.djLatency;
+				console.log('from server ', req.latency, socket.user.latency, party.djLatency);
 				socket.broadcast.emit(EVENT_LISTENER_SYNC, req);
 			}
 		}

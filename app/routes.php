@@ -27,9 +27,9 @@ Route::get('/audio', function() {
 	return View::make('pages.audio.index');
 });
 
-Route::get('/', function(){
-	return View::make('pages.styles.index');
-});
+// Route::get('/', function(){
+// 	return View::make('pages.styles.index');
+// });
 
 Route::get('/trackdetails', function(){
 	$artist = Input::get('artist');

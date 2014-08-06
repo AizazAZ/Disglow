@@ -20,24 +20,30 @@ initScripts['player'] = function(element) {
 	
 	var darray = [];
 	
-	function play(track, position, req){
+	function play(track, req){
+
+		var position = req.playbackPosition || 0;
+
+		player.latency = req.latency / 1000;
+
+		player.playClient(track, position);
 
 
-		if (playCount < 2) {
+		// if (playCount < 2) {
 
-			var d = getCurrentTime() - req.time;
+		// 	var d = getCurrentTime() - req.time;
 
-			console.log('d', d);
+		// 	console.log('d', d);
 
-			darray.push(d);
+		// 	darray.push(d);
 
-			playCount++;
+		// 	playCount++;
 
-		} else {
-			player.latency = ((darray[0] + darray[1]) / 2 / 10);
-			console.log('latency', player.latency);
-			player.playClient(track, position);
-		}
+		// } else {
+		// 	player.latency = ((darray[0] + darray[1]) / 2 / 10);
+		// 	console.log('latency', player.latency);
+		// 	player.playClient(track, position);
+		// }
 
 
 
@@ -126,36 +132,54 @@ Player.track = function(data, player) {
 	this.artist = data.artists[0].name;
 	this.preview = data.preview_url;
 	this.colour = data.colour || adjustColour((data.popularity * 0.01));
-	this.bpm = 0;
-	this.danceability = 0;
-	this.energy = 0;
+	
+	this.bpm = data.bpm || 0;
+	this.danceability = data.danceability || 0;
+	this.energy = data.energy || 0;
+	
 	this.buffered = false;
 	this.buffering = false;
+	
+	this.hitEchoNest = data.hitEchoNest || false;
+	
 
-	this.add = function() {
+	this.add = function(buffer) {
+
+		buffer = buffer || true;
+
+		console.log('here is the track', this);
 
 		player.queue.push(this);
-		player.bufferTracks();
+
+		if (buffer) {
+
+ 			player.bufferTracks();
+		}
 
 		// Attempt to get some stuff from the Echonest!
-		(function(track){
-			$.getJSON('/trackdetails', {
-					artist: track.artist,
-					title: track.name
-				}, function(data){
-					console.log(data);
-				if (data.response.status.message == 'Success'){
-					// Adjust the colour.
-					if (data.response.songs.length > 0){
-						var audioSummary = data.response.songs[0].audio_summary;
-						track.colour = adjustColour(audioSummary.energy, audioSummary.danceability);
 
-						track.tempo = audioSummary.tempo;
-						track.energy = audioSummary.energy;
+		if (!this.hitEchoNest) {
+			
+			(function(track){
+				$.getJSON('/trackdetails', {
+						artist: track.artist,
+						title: track.name
+					}, function(data){
+						console.log(data);
+					if (data.response.status.message == 'Success'){
+						track.hitEchoNest = true;
+						// Adjust the colour.
+						if (data.response.songs.length > 0){
+							var audioSummary = data.response.songs[0].audio_summary;
+							track.colour = adjustColour(audioSummary.energy, audioSummary.danceability);
+
+							track.tempo = audioSummary.tempo;
+							track.energy = audioSummary.energy;
+						}
 					}
-				}
-			});
-		})(this);
+				});
+			})(this);
+		}
 
 	};
 
@@ -297,19 +321,25 @@ Player.prototype.playClient = function(track, position) {
 		name: track.name,
 		artists: artists,
 		preview_url: track.preview,
-		colour: track.colour
+		colour: track.colour,
+		bpm: track.bpm,
+		danceability: track.danceability,
+		energy: track.energy,
+		hitEchoNest: track.hitEchoNest
 	}, self);
 
 	console.log('T', t);
 	console.log('player', this);
 
-	this.queue.push(t);
+	t.add(false);
+
+	//this.queue.push(t);
 
 	var timeBefore = getCurrentTime();
 
 	console.log(timeBefore);
 
-	this.bufferTracks(function() {
+	self.bufferTracks(function() {
 
 		console.log('finished buffering !!!!!!!!!');
 
@@ -342,50 +372,62 @@ Player.prototype.bufferTracks = function(callback) {
 
 	console.log('buffer tracks', self.queue());
 	console.log(self.queue()[0]);
+	console.log('callback in buffertracks', callback);
 
-
+	if (callback) {
+		window.bufferCallback = callback;
+	}
 
 	// Buffer first two tracks in the queue
 
-	for (var i = 0, len = self.queue().length; i < len && i < 2; i++) {
-		
-		var track = self.queue()[i];
 
-		if (!track.buffered && !track.buffering) {
 
-			track.buffering = true;
+		for (var i = 0, len = self.queue().length; i < len && i < 2; i++) {
+			
+			var track = self.queue()[i];
 
-			bufferLoader = new BufferLoader(
-				self.context, [track.preview], function(bufferList) {
+			if (!track.buffered && !track.buffering) {
 
-					track.buffered = true;
-					track.buffering = false;
+				track.buffering = true;
 
-					track.source = self.context.createBufferSource();
-					track.source.buffer = bufferList[0];
+				var bufferLoader = new BufferLoader(
+					self.context, [track.preview], function(bufferList) {
 
-					console.log('source', track.source);
-					console.log('buffer', track.source.buffer);
+						track.buffered = true;
+						track.buffering = false;
 
-					//source.connect(filter);
-					//filter.connect(context.destination);
-					track.source.connect(self.context.destination);
+						track.source = self.context.createBufferSource();
+						track.source.buffer = bufferList[0];
 
-					// self.source.onended = function() {
-					// 	console.log('sound ended');
-					// 	self.queue()[0].remove();
-					// 	self.doPlayClick();
-					// };
+						console.log('source', track.source);
+						console.log('buffer', track.source.buffer);
 
-					if (callback) callback();
+						//source.connect(filter);
+						//filter.connect(context.destination);
+						track.source.connect(self.context.destination);
 
-				}
-			);
+						// self.source.onended = function() {
+						// 	console.log('sound ended');
+						// 	self.queue()[0].remove();
+						// 	self.doPlayClick();
+						// };
 
-			bufferLoader.load();
+						console.log('going to callback now', window.bufferCallback);
 
+						if (typeof window.bufferCallback != 'undefined' && window.bufferCallback != null) {
+							window.bufferCallback();
+							window.bufferCallback = null;
+						}
+
+					}
+				);
+
+				bufferLoader.load();
+
+			}
 		}
-	};
+
+		
 
 };
 
