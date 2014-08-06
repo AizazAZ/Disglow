@@ -77,7 +77,7 @@ initScripts['party-page'] = function(element) {
 	function setDj(){
 		object.isDj = true;
 		object.pollInterval = setInterval(pollServer, POLL_INTERVAL);
-		$(object.element).addClass('is-dj');
+		$(object.element).addClass('is-dj').removeClass('not-dj');
 	}
 
 	function pollServer(){
