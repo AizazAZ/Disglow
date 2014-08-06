@@ -7,7 +7,7 @@
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 		
-		<title>@yield('meta_title', 'The Default Title')</title>
+		<title>@yield('meta_title', 'DISGLOW')</title>
 		<meta name="description" content="@yield('meta_description', 'The Default Description')">
 		<meta name="keywords" content="@yield('meta_keywords', 'the,default,keywords')" />
 		

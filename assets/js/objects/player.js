@@ -15,9 +15,38 @@ initScripts['player'] = function(element) {
 	ko.applyBindings(player, $(element)[0]);
 
 	player.init();
+
+	var playCount = 0;
 	
-	function play(track){
-		player.play(track);
+	var darray = [];
+	
+	function play(track, req){
+
+		var position = req.playbackPosition || 0;
+
+		player.latency = req.latency / 1000;
+
+		player.playClient(track, position);
+
+
+		// if (playCount < 2) {
+
+		// 	var d = getCurrentTime() - req.time;
+
+		// 	console.log('d', d);
+
+		// 	darray.push(d);
+
+		// 	playCount++;
+
+		// } else {
+		// 	player.latency = ((darray[0] + darray[1]) / 2 / 10);
+		// 	console.log('latency', player.latency);
+		// 	player.playClient(track, position);
+		// }
+
+
+
 	}
 
 	function destroy(){
@@ -51,6 +80,8 @@ function Player() {
 	this.source = null;
 
 	this.partyPages = null;
+
+	this.latency = 0;
 
 
 
@@ -100,14 +131,55 @@ Player.track = function(data, player) {
 	this.name = data.name;
 	this.artist = data.artists[0].name;
 	this.preview = data.preview_url;
-	this.colour = randomHexColour();
+	this.colour = data.colour || adjustColour((data.popularity * 0.01));
+	
+	this.bpm = data.bpm || 0;
+	this.danceability = data.danceability || 0;
+	this.energy = data.energy || 0;
+	
 	this.buffered = false;
 	this.buffering = false;
+	
+	this.hitEchoNest = data.hitEchoNest || false;
+	
 
-	this.add = function() {
+	this.add = function(buffer) {
+
+		buffer = buffer || true;
+
+		console.log('here is the track', this);
 
 		player.queue.push(this);
-		player.bufferTracks();
+
+		if (buffer) {
+
+ 			player.bufferTracks();
+		}
+
+		// Attempt to get some stuff from the Echonest!
+
+		if (!this.hitEchoNest) {
+			
+			(function(track){
+				$.getJSON('/trackdetails', {
+						artist: track.artist,
+						title: track.name
+					}, function(data){
+						console.log(data);
+					if (data.response.status.message == 'Success'){
+						track.hitEchoNest = true;
+						// Adjust the colour.
+						if (data.response.songs.length > 0){
+							var audioSummary = data.response.songs[0].audio_summary;
+							track.colour = adjustColour(audioSummary.energy, audioSummary.danceability);
+
+							track.tempo = audioSummary.tempo;
+							track.energy = audioSummary.energy;
+						}
+					}
+				});
+			})(this);
+		}
 
 	};
 
@@ -131,7 +203,7 @@ Player.prototype.doPlayClick = function() {
 	self.partyPages = objectManager.getObjectsOfType('party-page');
 	for (var i = 0; i < self.partyPages.length; i++) {
 		console.log(self.partyPages);
-		self.partyPages[i].startPlayback(self.context, {
+		self.partyPages[i].startPlayback(self, {
 			name: track.name,
 			artist: track.artist,
 			preview: track.preview,
@@ -148,10 +220,21 @@ Player.prototype.play = function(track) {
 	
 	var self = this;
 
+	console.log('start playback');
 
-	// self.queue()[0].start(0);
+	self.playbackPosition = 0;
+	self.totalPlayback = self.context.currentTime;
 
 	track.source.start(0);
+
+	self.playbackInterval = setInterval(function() {
+
+		//console.log(self.context.currentTime, self.totalPlayback, self.context.currentTime - self.totalPlayback);
+
+		self.playbackPosition = self.context.currentTime - self.totalPlayback;
+
+	}, 100);
+
 
 	track.source.onended = function() {
 		console.log('sound ended');
@@ -219,54 +302,132 @@ Player.prototype.stop = function() {
 };
 
 
-Player.prototype.bufferTracks = function() {
+Player.prototype.playClient = function(track, position) {
+
+	if (!track) return;
+
+	if (!position) position = 0;
+
+	console.log('playclient', track, position);
+
+	var self = this;
+
+	var artists = [];
+	
+	artists.push({name: track.artist});
+
+
+	var t = new Player.track({
+		name: track.name,
+		artists: artists,
+		preview_url: track.preview,
+		colour: track.colour,
+		bpm: track.bpm,
+		danceability: track.danceability,
+		energy: track.energy,
+		hitEchoNest: track.hitEchoNest
+	}, self);
+
+	console.log('T', t);
+	console.log('player', this);
+
+	t.add(false);
+
+	//this.queue.push(t);
+
+	var timeBefore = getCurrentTime();
+
+	console.log(timeBefore);
+
+	self.bufferTracks(function() {
+
+		console.log('finished buffering !!!!!!!!!');
+
+		self.playbackPosition = position;
+		self.totalPlayback = self.context.currentTime;
+
+		self.playbackInterval = setInterval(function() {
+
+			//console.log(self.context.currentTime, self.totalPlayback, self.context.currentTime - self.totalPlayback);
+
+			self.playbackPosition = self.context.currentTime - self.totalPlayback;
+
+		}, 100);
+
+		var timeAfter = getCurrentTime();
+		console.log('time diff', timeAfter, timeBefore, (timeAfter - timeBefore) / 1000);
+		console.log('delay', self.context.currentTime, position, (timeAfter - timeBefore) / 1000);
+
+		t.source.start(0, self.context.currentTime + position + ((timeAfter - timeBefore) / 1000) + self.latency);
+		
+	});
+
+
+};
+
+
+Player.prototype.bufferTracks = function(callback) {
 
 	var self = this;
 
 	console.log('buffer tracks', self.queue());
 	console.log(self.queue()[0]);
+	console.log('callback in buffertracks', callback);
 
-
+	if (callback) {
+		window.bufferCallback = callback;
+	}
 
 	// Buffer first two tracks in the queue
 
-	for (var i = 0, len = self.queue().length; i < len && i < 2; i++) {
-		
-		var track = self.queue()[i];
 
-		if (!track.buffered && !track.buffering) {
 
-			track.buffering = true;
+		for (var i = 0, len = self.queue().length; i < len && i < 2; i++) {
+			
+			var track = self.queue()[i];
 
-			bufferLoader = new BufferLoader(
-				self.context, [track.preview], function(bufferList) {
+			if (!track.buffered && !track.buffering) {
 
-					track.buffered = true;
-					track.buffering = false;
+				track.buffering = true;
 
-					track.source = self.context.createBufferSource();
-					track.source.buffer = bufferList[0];
+				var bufferLoader = new BufferLoader(
+					self.context, [track.preview], function(bufferList) {
 
-					console.log('source', track.source);
-					console.log('buffer', track.source.buffer);
+						track.buffered = true;
+						track.buffering = false;
 
-					//source.connect(filter);
-					//filter.connect(context.destination);
-					track.source.connect(self.context.destination);
+						track.source = self.context.createBufferSource();
+						track.source.buffer = bufferList[0];
 
-					// self.source.onended = function() {
-					// 	console.log('sound ended');
-					// 	self.queue()[0].remove();
-					// 	self.doPlayClick();
-					// };
+						console.log('source', track.source);
+						console.log('buffer', track.source.buffer);
 
-				}
-			);
+						//source.connect(filter);
+						//filter.connect(context.destination);
+						track.source.connect(self.context.destination);
 
-			bufferLoader.load();
+						// self.source.onended = function() {
+						// 	console.log('sound ended');
+						// 	self.queue()[0].remove();
+						// 	self.doPlayClick();
+						// };
 
+						console.log('going to callback now', window.bufferCallback);
+
+						if (typeof window.bufferCallback != 'undefined' && window.bufferCallback != null) {
+							window.bufferCallback();
+							window.bufferCallback = null;
+						}
+
+					}
+				);
+
+				bufferLoader.load();
+
+			}
 		}
-	};
+
+		
 
 };
 
