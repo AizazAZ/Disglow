@@ -20,6 +20,7 @@
 </header>
 
 
+
 <div class="section first second">
 	<h2>Find a party to join</h2>
 <ul class="parties-list">
@@ -30,4 +31,7 @@
 
 </ul>
 </div>
+
 @stop
+
+
