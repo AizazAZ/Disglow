@@ -326,9 +326,9 @@ Player.prototype.playClient = function(track, position) {
 
 		var timeAfter = getCurrentTime();
 		console.log('time diff', timeAfter, timeBefore, (timeAfter - timeBefore) / 1000);
-		console.log('delay', self.context.currentTime, position);
+		console.log('delay', self.context.currentTime, position, (timeAfter - timeBefore) / 1000);
 
-		t.source.start(self.context.currentTime + position + ((timeAfter - timeBefore) / 1000) + self.latency);
+		t.source.start(0, self.context.currentTime + position + ((timeAfter - timeBefore) / 1000) + self.latency);
 		
 	});
 
