@@ -36,7 +36,7 @@ initScripts['party-page'] = function(element) {
 		}
 
 		if (isListenerOfParty(req.partySlug)){
-			console.log('Listener sync', req);
+			//console.log('Listener sync', req);
 
 			// If no track is playing, start it playing.
 			if (object.playingTrack == null){
@@ -44,7 +44,8 @@ initScripts['party-page'] = function(element) {
 
 				var players = getPlayers();
 				for (var i = 0; i < players.length; i++) {
-					players[i].play(object.playingTrack);
+					console.log('trying to play client', req);
+					players[i].play(object.playingTrack, req.playbackPosition);
 				}
 			}
 		}
@@ -84,10 +85,10 @@ initScripts['party-page'] = function(element) {
 		req.track = object.playingTrack;
 		
 		if (object.playbackContext) {
-			req.playbackPosition = object.playbackContext.currentTime;
+			req.playbackPosition = object.playbackContext.playbackPosition;
 		}
 
-		//console.log('Poll Server', req);
+		console.log('Poll Server', req);
 
 		//console.log('Hi from poll server', req);
 
