@@ -19,6 +19,7 @@ initScripts['player'] = function(element) {
 	var playCount = 0;
 	
 	var darray = [];
+
 	
 	function play(track, req){
 
@@ -190,6 +191,18 @@ Player.track = function(data, player) {
 };
 
 
+Player.prototype.doPlayClientClick = function() {
+
+	var self = this;
+	
+	// Get the top track.
+	var track = this.queue()[0];
+
+	// Inform the parties!
+
+	// Play the track.
+	this.play(track);
+}
 
 
 Player.prototype.doPlayClick = function() {
