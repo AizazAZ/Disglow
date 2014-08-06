@@ -35,6 +35,7 @@
 
 					<div class="track">
 						<a href="#" data-bind="click: add" class="button">Add track</a>
+						<span class="artist" data-bind="text: artist"></span>
 						<span class="name" data-bind="text: name"></span>
 					</div>
 

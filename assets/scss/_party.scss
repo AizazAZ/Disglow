@@ -21,28 +21,23 @@
 
 .party-page{
 	@include scut-clearfix;
-
-	@include transition(background-color, 1000ms, ease-in-out);
+	background: white;
+	@include transition(background-color, 500ms, ease-in-out);
 }
 
 .participant {
 
-
-
 }
 
+.party-page .header {
+	display:none;
+}
 
+.party-page .header-playback {
+	display:block;
+}
 
-
-	.party-page .header {
-		display:none;
-	}
-
-	.party-page .header-playback {
-		display:block;
-	}
-
-	.header-playback {
+.header-playback {
 	position:absolute;
 	width:100%;
 	margin:0;

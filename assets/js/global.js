@@ -30,8 +30,9 @@ var EVENT_DJ_ASSIGN = 'dj.assign';
 var EVENT_LISTENER_SYNC = 'listener.sync';
 var EVENT_LISTENER_SWITCH = 'listener.switch';
 var POLL_INTERVAL = 1000;
-var VISUALISER_INTERVAL = 1000;
+var VISUALISER_INTERVAL = 2000;
 var COLOUR_FLUCTUATION = 0.05;
+var EVENT_CLIENT_PING = 'client.ping';
 
 var baseUrl = window.location.protocol + '//' + window.location.hostname;
 var socket = io.connect(baseUrl + ':3000');
@@ -130,7 +131,11 @@ function colourToHex(colour) {
 }
 
 function random255(){
-	return Math.floor(Math.random() * 255);
+	return random0N(255);
+}
+
+function random0N(n){
+	return Math.floor(Math.random() * n);
 }
 
 function colourLuminance(hex, lum) {
@@ -151,4 +156,47 @@ function colourLuminance(hex, lum) {
 	}
 
 	return rgb;
+}
+
+function hslToRgb(h, s, l){
+    var r, g, b;
+
+    if(s == 0){
+        r = g = b = l; // achromatic
+    }else{
+        function hue2rgb(p, q, t){
+            if(t < 0) t += 1;
+            if(t > 1) t -= 1;
+            if(t < 1/6) return p + (q - p) * 6 * t;
+            if(t < 1/2) return q;
+            if(t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+            return p;
+        }
+
+        var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+        var p = 2 * l - q;
+        r = hue2rgb(p, q, h + 1/3);
+        g = hue2rgb(p, q, h);
+        b = hue2rgb(p, q, h - 1/3);
+    }
+
+    return [Math.ceil(r * 255), Math.ceil(g * 255), Math.ceil(b * 255)];
+}
+
+function adjustColour(number, second){
+	if (typeof second == 'undefined'){
+		second = 0.59;
+	}
+	else{
+		second = 1 - ((second * 0.3) + 0.29);
+	}
+	// else{
+	// 	second = (Math.cos((second * Math.PI) - Math.PI) + 1) * 0.5;
+	// }
+
+	var hue = (Math.cos((number * Math.PI) - Math.PI) + 1) * 0.5;
+
+	var hsl = [hue, 0.75, second];
+	var rgb = hslToRgb(hsl[0], hsl[1], hsl[2]);
+	return colourToHex('rgb(' + rgb[0] + ', ' + rgb[1] + ', ' + rgb[2] + ')');
 }
