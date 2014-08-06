@@ -15,7 +15,8 @@
 
 
 		<h1>{{ $party->name }}</h1>
-
+	</div>
+	<div class="section second">
 		<div data-init="player" class="dj-only">
 
 			<div class="search-section">
@@ -28,7 +29,7 @@
 				<div class="search-results" data-bind="foreach: tracks">
 
 					<div class="track">
-						<a href="#" data-bind="click: add">Add track</a>
+						<a href="#" data-bind="click: add" class="button">Add track</a>
 						<span class="name" data-bind="text: name"></span>
 					</div>
 
@@ -48,7 +49,7 @@
 				<div data-bind="foreach: queue">
 
 					<div class="track">
-						<a href="#" data-bind="click: remove">Remove track</a>
+						<a href="#" data-bind="click: remove" class="button">Remove track</a>
 						<span class="name" data-bind="text: name"></span>
 					</div>
 
@@ -61,7 +62,7 @@
 
 
 
-
+	</div>
 		</div>
 
 		<div class="section third">
