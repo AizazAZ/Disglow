@@ -3,7 +3,20 @@
 
 	.is-dj &{
 		display: block;
+
 	}
+}
+
+.not-dj {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+}
+
+.dj-section, .dj-section > div{
+	@include scut-clearfix;
 }
 
 .party-page{
@@ -12,12 +25,23 @@
 	@include transition(background-color, 500ms, ease-in-out);
 }
 
-.search-section{
-width: 49%;
-float: left;
+.participant {
+
 }
 
-.queue-section{
-	width: 49%;
-	float: right;
+.party-page .header {
+	display:none;
+}
+
+.party-page .header-playback {
+	display:block;
+}
+
+.header-playback {
+	position:absolute;
+	width:100%;
+	margin:0;
+	top:0;
+	height:75px;
+	z-index: 10;
 }
