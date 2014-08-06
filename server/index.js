@@ -39,6 +39,7 @@ switch(process.env.NODE_ENV){
 		blah: 'blah'
 	}
 }
+console.log('conf', conf);
 
 var parties = [];
 var partiesById = [];
@@ -59,6 +60,7 @@ var db = mysql.createConnection({
 // Set up the parties.
 db.query('SELECT id, name, slug FROM parties WHERE active = 1 ORDER BY created_at DESC', function(err, rows) {
 	// Add it to the parties arrays.
+	console.log(err);
 	for (var i = 0; i < rows.length; i++) {
 		var row = rows[i];
 		addParty(row.id, row.name, row.slug);

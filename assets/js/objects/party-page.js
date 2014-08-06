@@ -45,7 +45,7 @@ initScripts['party-page'] = function(element) {
 				var players = getPlayers();
 				for (var i = 0; i < players.length; i++) {
 					console.log('trying to play client', req);
-					players[i].play(object.playingTrack, req.playbackPosition);
+					players[i].play(object.playingTrack, req.playbackPosition, req);
 				}
 			}
 		}

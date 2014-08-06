@@ -4,8 +4,7 @@ initScripts['player'] = function(element) {
 		type: "player",
 		element: element,
 		destroy: destroy,
-		play: play,
-		player: null
+		play: play
 	};
 
 	console.log('Player instantiatied');
@@ -16,9 +15,32 @@ initScripts['player'] = function(element) {
 	ko.applyBindings(player, $(element)[0]);
 
 	player.init();
+
+	var playCount = 0;
 	
-	function play(track, position){
-		player.playClient(track, position);
+	var darray = [];
+	
+	function play(track, position, req){
+
+
+		if (playCount < 2) {
+
+			var d = getCurrentTime() - req.time;
+
+			console.log('d', d);
+
+			darray.push(d);
+
+			playCount++;
+
+		} else {
+			player.latency = ((darray[0] + darray[1]) / 2 / 10);
+			console.log('latency', player.latency);
+			player.playClient(track, position);
+		}
+
+
+
 	}
 
 	function destroy(){
@@ -52,6 +74,8 @@ function Player() {
 	this.source = null;
 
 	this.partyPages = null;
+
+	this.latency = 0;
 
 
 
@@ -233,6 +257,8 @@ Player.prototype.stop = function() {
 
 Player.prototype.playClient = function(track, position) {
 
+	if (!track) return;
+
 	if (!position) position = 0;
 
 	console.log('playclient', track, position);
@@ -276,8 +302,10 @@ Player.prototype.playClient = function(track, position) {
 		}, 100);
 
 		var timeAfter = getCurrentTime();
+		console.log('time diff', timeAfter, timeBefore, (timeAfter - timeBefore) / 1000);
+		console.log('delay', self.context.currentTime, position);
 
-		t.source.start(self.context.currentTime + position + (timeAfter-timeBefore / 1000));
+		t.source.start(self.context.currentTime + position + ((timeAfter - timeBefore) / 1000) + self.latency);
 		
 	});
 
