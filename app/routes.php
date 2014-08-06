@@ -30,3 +30,4 @@ Route::get('/audio', function() {
 Route::get('/', function(){
 	return View::make('pages.styles.index');
 });
+

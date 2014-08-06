@@ -8,16 +8,32 @@
 
 .party-page{
 	@include scut-clearfix;
-	background: white;
+	background: red;
 	@include transition(background-color, 1000ms, ease-in-out);
 }
 
-.search-section{
-width: 49%;
-float: left;
+.participant {
+	background:red;
+
+
 }
 
-.queue-section{
-	width: 49%;
-	float: right;
+
+
+
+	.party-page .header {
+		display:none;
+	}
+
+	.party-page .header-playback {
+		display:block;
+	}
+
+	.header-playback {
+	position:absolute;
+	width:100%;
+	margin:0;
+	top:0;
+	height:75px;
+	z-index: 10;
 }

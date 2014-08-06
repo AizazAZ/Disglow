@@ -2,9 +2,16 @@
 
 @section('content')
 
+<div class="header-playback">
+	<a href="/"><img src="{{ cdn('images/logo_lightbg.png') }}" class="logo"></a>
+
+	
+</div>
+
 <div class="party-page" data-init="party-page" data-slug="{{ $party->slug }}">
 	
-<div class="section first">
+<div class="section first-playback">
+
 	<h1>{{ $party->name }}</h1>
 </div>
 
@@ -34,8 +41,9 @@
 			
 			<h2>Play Queue</h2>
 
-			<div class="button play"><a href="#" data-bind="click: doPlayClick">Play</a></div>
+			<div class="button play"><a href="#" data-bind="click: doPlayClick"><img src="{{ cdn('images/playing.gif') }}" class="playing">Play</a></div>
 
+<button id="login" class="btn btn-primary">Save Playlist</button>
 			<div data-bind="foreach: queue">
 				
 				<div class="track">
@@ -49,9 +57,14 @@
 
 </div>
 
+
+</div>
+
+<div class="section third">
+	<a href="" class="button play">Choose another party</a>
 		
 	</div>
-</div>
+
 
 @stop
 

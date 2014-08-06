@@ -39,13 +39,17 @@ img.rfz {
 	margin-top:10px;
 }
 
+img.rfz:hover {
+	opacity:0.5;
+		@include transition(opacity, 1000ms, ease-in-out);
+}
 
 
 a {color:#2b4899;}
 a:hover {text-decoration:none;}
 
 .button a {text-decoration:none;}
-.button a:hover {opacity:0.5;}
+.button a:hover {opacity:0.5; text-decoration:none;}
 
 .login a {color:#fff;}
 
@@ -58,6 +62,12 @@ img.logo {
 	width:135px;
 	margin:20px;
 	float:left;
+
+}
+
+img.logo:hover {
+	opacity:0.5;
+	@include transition(opacity, 1000ms, ease-in);
 }
 
 h1 {
@@ -108,6 +118,8 @@ h4 {
 	z-index: 10;
 }
 
+
+
 .section {
 	padding:40px 20px;
 		overflow:hidden;
@@ -116,6 +128,11 @@ h4 {
 .first {
 	background:#fff;
 	margin-top: 75px;
+	
+}
+
+.first-playback {
+	padding-top: 75px;
 	
 }
 
@@ -169,8 +186,8 @@ text-transform:uppercase;
 	font-weight:900;
 padding: 1px 8px 0px 8px;
 		float:right;
+		text-decoration:none;
 
-		@include respond(small) {float:left;}
 }
 
 form {
@@ -213,6 +230,8 @@ padding: 1px 8px 0px 8px;
 .play {
 	float:left;
 	margin-bottom:16px;
+
+		@include respond(small) {float:left;}
 }
 
 button:hover, html input[type="button"]:hover, input[type="reset"]:hover, input[type="submit"]:hover {
@@ -245,7 +264,8 @@ height: 39px;
 
 
 img.playing {
-	width:11px;
+	width:8px;
+	margin-right:5px;
 }
 
 ul {
@@ -261,3 +281,34 @@ list-style-type: none;
 ul.parties-list {
 	overflow: hidden;
 }
+
+
+.search-section{
+width: 49%;
+float: left;
+@include respond(small) {width: 100%; float:left;}
+}
+
+.queue-section{
+	width: 49%;
+	float: right;
+
+@include respond(small) {width: 100%; float:left;}
+}
+
+.btn {
+border-radius: 500px;
+line-height: 1.5;
+padding: 4px 20px 2px;
+text-transform: uppercase;
+border-width: 1px;
+letter-spacing: 2px;
+float:right;
+}
+
+.btn-primary {
+color: #fff;
+background-color: #84bd00;
+border-color: #84bd00;
+}
+
