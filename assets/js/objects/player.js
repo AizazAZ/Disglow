@@ -15,9 +15,32 @@ initScripts['player'] = function(element) {
 	ko.applyBindings(player, $(element)[0]);
 
 	player.init();
+
+	var playCount = 0;
 	
-	function play(track){
-		player.play(track);
+	var darray = [];
+	
+	function play(track, position, req){
+
+
+		if (playCount < 2) {
+
+			var d = getCurrentTime() - req.time;
+
+			console.log('d', d);
+
+			darray.push(d);
+
+			playCount++;
+
+		} else {
+			player.latency = ((darray[0] + darray[1]) / 2 / 10);
+			console.log('latency', player.latency);
+			player.playClient(track, position);
+		}
+
+
+
 	}
 
 	function destroy(){
@@ -51,6 +74,8 @@ function Player() {
 	this.source = null;
 
 	this.partyPages = null;
+
+	this.latency = 0;
 
 
 
@@ -100,20 +125,12 @@ Player.track = function(data, player) {
 	this.name = data.name;
 	this.artist = data.artists[0].name;
 	this.preview = data.preview_url;
-<<<<<<< HEAD
+	this.colour = data.colour || adjustColour((data.popularity * 0.01));
 	this.bpm = 0;
 	this.danceability = 0;
 	this.energy = 0;
-	// artist etc
-	// this.colour = randomHexColour();
-
-	// Sort the colour from popularity initially.
-	this.colour = adjustColour((data.popularity * 0.01));
-=======
-	this.colour = randomHexColour();
 	this.buffered = false;
 	this.buffering = false;
->>>>>>> ff4ea259c66046639bc351dc68ff5b4ec7ecf817
 
 	this.add = function() {
 
@@ -162,7 +179,7 @@ Player.prototype.doPlayClick = function() {
 	self.partyPages = objectManager.getObjectsOfType('party-page');
 	for (var i = 0; i < self.partyPages.length; i++) {
 		console.log(self.partyPages);
-		self.partyPages[i].startPlayback(self.context, {
+		self.partyPages[i].startPlayback(self, {
 			name: track.name,
 			artist: track.artist,
 			preview: track.preview,
@@ -179,10 +196,21 @@ Player.prototype.play = function(track) {
 	
 	var self = this;
 
+	console.log('start playback');
 
-	// self.queue()[0].start(0);
+	self.playbackPosition = 0;
+	self.totalPlayback = self.context.currentTime;
 
 	track.source.start(0);
+
+	self.playbackInterval = setInterval(function() {
+
+		//console.log(self.context.currentTime, self.totalPlayback, self.context.currentTime - self.totalPlayback);
+
+		self.playbackPosition = self.context.currentTime - self.totalPlayback;
+
+	}, 100);
+
 
 	track.source.onended = function() {
 		console.log('sound ended');
@@ -250,7 +278,65 @@ Player.prototype.stop = function() {
 };
 
 
-Player.prototype.bufferTracks = function() {
+Player.prototype.playClient = function(track, position) {
+
+	if (!track) return;
+
+	if (!position) position = 0;
+
+	console.log('playclient', track, position);
+
+	var self = this;
+
+	var artists = [];
+	
+	artists.push({name: track.artist});
+
+
+	var t = new Player.track({
+		name: track.name,
+		artists: artists,
+		preview_url: track.preview,
+		colour: track.colour
+	}, self);
+
+	console.log('T', t);
+	console.log('player', this);
+
+	this.queue.push(t);
+
+	var timeBefore = getCurrentTime();
+
+	console.log(timeBefore);
+
+	this.bufferTracks(function() {
+
+		console.log('finished buffering !!!!!!!!!');
+
+		self.playbackPosition = position;
+		self.totalPlayback = self.context.currentTime;
+
+		self.playbackInterval = setInterval(function() {
+
+			//console.log(self.context.currentTime, self.totalPlayback, self.context.currentTime - self.totalPlayback);
+
+			self.playbackPosition = self.context.currentTime - self.totalPlayback;
+
+		}, 100);
+
+		var timeAfter = getCurrentTime();
+		console.log('time diff', timeAfter, timeBefore, (timeAfter - timeBefore) / 1000);
+		console.log('delay', self.context.currentTime, position);
+
+		t.source.start(self.context.currentTime + position + ((timeAfter - timeBefore) / 1000) + self.latency);
+		
+	});
+
+
+};
+
+
+Player.prototype.bufferTracks = function(callback) {
 
 	var self = this;
 
@@ -290,6 +376,8 @@ Player.prototype.bufferTracks = function() {
 					// 	self.queue()[0].remove();
 					// 	self.doPlayClick();
 					// };
+
+					if (callback) callback();
 
 				}
 			);
