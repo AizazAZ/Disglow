@@ -32,6 +32,17 @@ footer {
 
 }
 
+footer.intro {
+	background: #2b4899;
+	color: #fff;
+	padding: 13px 0px 23px 0px;
+	overflow: hidden;
+	position:absolute;
+	width:100%;
+	bottom:0;
+
+}
+
 img.rfz {
 	width:60px;
 	margin:0 auto;
@@ -314,3 +325,33 @@ background-color: #84bd00;
 border-color: #84bd00;
 }
 
+.logo-section {
+	
+	background: #2b4899;
+
+background-image:url('/assets/images/biglogo-darkbg.png');
+    background-size: 80%;
+height: 100%;
+position: absolute;
+width: 100%;
+background-repeat:no-repeat;
+background-attachment:fixed;
+background-position:center; 
+		@include transition(background, 1000ms, ease-in);
+}
+
+.logo-section:hover {
+background: white;
+background-image:url('/assets/images/biglogo-lightbg.png');
+
+    background-size: 80%;
+background-repeat:no-repeat;
+background-attachment:fixed;
+background-position:center; 
+		@include transition(background, 1000ms, ease-in);
+
+}
+
+.big-logo {
+
+}
