@@ -4,7 +4,7 @@
 
 <div class="section">
 
-	{{ Form::open(['url' => 'parties', 'class' => 'form']) }}
+	{{ Form::open(['url' => '/parties', 'class' => 'form']) }}
 
 	<div class="form-group">
 		{{ Form::label('title', 'Title:') }}

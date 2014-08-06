@@ -186,12 +186,38 @@ Player.track = function(data, player) {
 	this.name = data.name;
 	this.artist = data.artists[0].name;
 	this.preview = data.preview_url;
-	this.colour = randomHexColour();
+	this.bpm = 0;
+	this.danceability = 0;
+	this.energy = 0;
 	// artist etc
+	// this.colour = randomHexColour();
+
+	// Sort the colour from popularity initially.
+	this.colour = adjustColour((data.popularity * 0.01));
 
 	this.add = function() {
 
 		player.queue.push(this);
+
+		// Attempt to get some stuff from the Echonest!
+		(function(track){
+			$.getJSON('/trackdetails', {
+					artist: track.artist,
+					title: track.name
+				}, function(data){
+					console.log(data);
+				if (data.response.status.message == 'Success'){
+					// Adjust the colour.
+					if (data.response.songs.length > 0){
+						var audioSummary = data.response.songs[0].audio_summary;
+						track.colour = adjustColour(audioSummary.energy, audioSummary.danceability);
+
+						track.tempo = audioSummary.tempo;
+						track.energy = audioSummary.energy;
+					}
+				}
+			});
+		})(this);
 
 	};
 

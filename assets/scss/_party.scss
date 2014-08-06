@@ -9,7 +9,7 @@
 .party-page{
 	@include scut-clearfix;
 	background: white;
-	@include transition(background-color, 1000ms, ease-in-out);
+	@include transition(background-color, 500ms, ease-in-out);
 }
 
 .search-section{

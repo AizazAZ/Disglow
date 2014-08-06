@@ -115,12 +115,37 @@ initScripts['party-page'] = function(element) {
 
 	function initVisualiser(){
 		// Set up the visualiser.
-		if (object.visualiserInterval == null){
-			object.upperColour = colourLuminance(object.playingTrack.colour, COLOUR_FLUCTUATION);
-			object.lowerColour = colourLuminance(object.playingTrack.colour, (COLOUR_FLUCTUATION * -1));
-			visualiser();
-			visualiserInterval = setInterval(visualiser, VISUALISER_INTERVAL);
+		clearInterval(object.visualiserInterval);
+
+		var track = object.playingTrack;
+
+		// Colour fluctuation based on energy
+		var adjustment = COLOUR_FLUCTUATION;
+		if (track.energy > 0){
+			adjustment = track.energy * 0.2;
 		}
+
+		object.upperColour = colourLuminance(object.playingTrack.colour, adjustment);
+		object.lowerColour = colourLuminance(object.playingTrack.colour, (adjustment * -1));
+
+		// The timer is based on bpm.
+		var timer = VISUALISER_INTERVAL;
+		var timer2 = '500ms';
+		if (track.tempo > 0){
+			timer = convertBpmMs(track.tempo);
+			timer2 = convertBpmMs(track.temp, 1.333333333333333333333);
+		}
+
+		visualiser();
+		$(object.element).css('transition-duration', timer2 + 'ms');
+		// $(object.element).css({
+		// 	WebkitTransitionDuration : timer + 'ms',
+		// 	MozTransitionDuration    : timer + 'ms',
+		// 	MsTransitionDuration     : timer + 'ms',
+		// 	OTransitionDuration      : timer + 'ms',
+		// 	transitionDuration       : timer + 'ms'
+		// })
+		object.visualiserInterval = setInterval(visualiser, timer);
 	}
 
 	function visualiser(){
@@ -131,6 +156,13 @@ initScripts['party-page'] = function(element) {
 			$(object.element).css('background-color', object.lowerColour);
 		}
 		object.onLowerColour = !object.onLowerColour;
+	}
+
+	function convertBpmMs(bpm, subdivision) {
+		if (typeof subdivision == 'undefined'){
+			subdivision = 0.25;
+		}
+		return Math.round(1/(bpm/60*subdivision*0.001));
 	}
 
 	function destroy(){
