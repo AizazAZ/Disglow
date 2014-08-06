@@ -32,6 +32,7 @@ var EVENT_LISTENER_SWITCH = 'listener.switch';
 var POLL_INTERVAL = 1000;
 var VISUALISER_INTERVAL = 2000;
 var COLOUR_FLUCTUATION = 0.05;
+var EVENT_CLIENT_PING = 'client.ping';
 
 var baseUrl = window.location.protocol + '//' + window.location.hostname;
 var socket = io.connect(baseUrl + ':3000');
