@@ -9,15 +9,20 @@
 	
 </div>
 
-<div class="party-page" data-init="party-page" data-slug="{{ $party->slug }}">
+<div class="party-page not-dj" data-init="party-page" data-slug="{{ $party->slug }}">
 	
 	<div class="section first-playback">
 
 
 		<h1>{{ $party->name }}</h1>
+
+
+	
+
+	
 	</div>
-	<div class="section second">
-		<div data-init="player" class="dj-only">
+	<div class="section second dj-only dj-section">
+		<div data-init="player">
 
 			<div class="search-section">
 
@@ -65,10 +70,7 @@
 	</div>
 		</div>
 
-		<div class="section third">
-			<a href="" class="button play">Choose another party</a>
-
-		</div>
+		
 
 	</div>
 </div>

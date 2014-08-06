@@ -3,17 +3,30 @@
 
 	.is-dj &{
 		display: block;
+
 	}
+}
+
+.not-dj {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+}
+
+.dj-section, .dj-section > div{
+	@include scut-clearfix;
 }
 
 .party-page{
 	@include scut-clearfix;
-	background: red;
+
 	@include transition(background-color, 1000ms, ease-in-out);
 }
 
 .participant {
-	background:red;
+
 
 
 }
