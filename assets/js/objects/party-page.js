@@ -29,6 +29,11 @@ initScripts['party-page'] = function(element) {
 		setDj();
     });
 
+    // Handle pings. Just send it back.
+    socket.on(EVENT_CLIENT_PING, function(req){
+    	socket.emit(EVENT_CLIENT_PING, req);
+    });
+
 	socket.on(EVENT_LISTENER_SYNC, function(req){
 		//console.log('Listener sync', req);
 		if (!isValidTrack(req.track)){

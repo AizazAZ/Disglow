@@ -5,6 +5,7 @@ var EVENT_DJ_SWITCH = 'dj.switch';
 var EVENT_DJ_ASSIGN = 'dj.assign';
 var EVENT_LISTENER_SYNC = 'listener.sync';
 var EVENT_LISTENER_SWITCH = 'listener.switch';
+var EVENT_CLIENT_PING = 'client.ping';
 
 
 var app = require('express')();
@@ -85,12 +86,51 @@ function connection(socket){
 		sessionId: currentId,
 		latestTime: 0,
 		currentParty: null,
-		isDj: false
+		isDj: false,
+		latency: 0,
+		lastPingTime: 0,
+		pingInterval: null,
+		pinging: false,
+		pingResults: []
 	};
 	currentId++;
 
 	connected++;
 	socket.id = socket.user.sessionId;
+
+	// Ping them immediatley and keep pinging 'em.
+	doPing(socket);
+	pingInterval = setInterval(function(){
+		doPing(socket);
+	}, 1000);
+
+	socket.on(EVENT_CLIENT_PING, function(req){
+		// Determine the latency with this client.
+		var user = socket.user;
+		var pingResult = (getCurrentTime() - user.lastPingTime) * 0.5;
+
+		user.pingResults.push(pingResult);
+
+		// Only average the ping from the latest 5 results.
+		if (user.pingResults.length > 5){
+			user.pingResults.splice(0, 1);
+		}
+
+		var total = 0;
+		for (var i = 0; i < user.pingResults.length; i++) {
+			total += user.pingResults[i];
+		}
+		user.latency = total / user.pingResults.length;
+
+		if (user.isDj){
+			var party = getPartyBySlug(user.currentParty);
+			party.djLatency = user.latency;
+		}
+
+		console.log(user.latency);
+
+		user.pinging = false;
+	});
 
 	// When they join a party.
 	socket.on(EVENT_JOIN_PARTY, function(req){
@@ -116,8 +156,13 @@ function connection(socket){
 		// console.log('DJ poll', req, user.isDj);
 		// Ensure the user is in fact a DJ.
 		if (socket.user.isDj){
-			req.partySlug = socket.user.currentParty;
-			socket.broadcast.emit(EVENT_LISTENER_SYNC, req);
+			var party = getPartyBySlug(socket.user.currentParty);
+
+			if (party != null){
+				req.partySlug = socket.user.currentParty;
+				req.latency = socket.user.latency + party.djLatency;
+				socket.broadcast.emit(EVENT_LISTENER_SYNC, req);
+			}
 		}
 	});
 
@@ -125,14 +170,24 @@ function connection(socket){
 		console.log('DJ switch', req);
 		// Ensure the user is in fact a DJ.
 		if (socket.user.isDj){
-			req.partySlug = socket.user.currentParty;
-			socket.broadcast.emit(EVENT_LISTENER_SWITCH, req);
+			var party = getPartyBySlug(socket.user.currentParty);
+
+			if (party != null){
+				req.partySlug = socket.user.currentParty;
+				req.latency = socket.user.latency + party.djLatency;
+				req.partySlug = socket.user.currentParty;
+				socket.broadcast.emit(EVENT_LISTENER_SWITCH, req);
+			}
 		}
 	});
 
 	socket.on('disconnect', function(){
 		console.log('a user disconnected')
 		connected--;
+
+		// Stop the interval.
+		clearInterval(socket.user.pingInterval);
+
 		if (socket.user.currentParty != null){
 			socket.leave(socket.user.currentParty);
 
@@ -152,12 +207,25 @@ function connection(socket){
 	});
 }
 
+function doPing(socket){
+	if (!socket.pinging){
+		socket.user.pinging = true;
+		socket.user.lastPingTime = getCurrentTime();
+		socket.emit(EVENT_CLIENT_PING, "");
+	}
+}
+
+function getCurrentTime(){
+	return new Date().getTime();
+}
+
 function addParty(partyId, partyName, partySlug){
 	var party = {
 		id: partyId,
 		name: partyName,
 		slug: partySlug,
 		hasDj: false,
+		djLatency: 0,
 		connectedUsers: []
 	}
 	parties.push(party);
