@@ -16,7 +16,7 @@
 
 		<h1>{{ $party->name }}</h1>
 
-		<a href="#" class="start-playing" data-click="doPlayClientClick">Start Playing</a>
+		<a href="#" class="start-playing" data-bind="click: doPlayClientClickFn">Start Playing</a>
 
 
 	

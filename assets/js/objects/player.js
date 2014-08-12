@@ -12,7 +12,7 @@ initScripts['player'] = function(element) {
 
 	var player = new Player();
 
-	ko.applyBindings(player, $(element)[0]);
+	ko.applyBindings(player, $(element).closest('div.party-page')[0]);
 
 	player.init();
 
@@ -83,6 +83,10 @@ function Player() {
 	this.partyPages = null;
 
 	this.latency = 0;
+
+	this.doPlayClientClickFn = function(){
+		self.doPlayClientClick();
+	}
 
 
 
@@ -193,6 +197,7 @@ Player.track = function(data, player) {
 
 Player.prototype.doPlayClientClick = function() {
 
+
 	var self = this;
 	
 	// Get the top track.
@@ -202,6 +207,7 @@ Player.prototype.doPlayClientClick = function() {
 
 	// Play the track.
 	this.play(track);
+
 }
 
 
@@ -402,6 +408,8 @@ Player.prototype.bufferTracks = function(callback) {
 			if (!track.buffered && !track.buffering) {
 
 				track.buffering = true;
+
+				console.log('setting up bufferloaders');
 
 				var bufferLoader = new BufferLoader(
 					self.context, [track.preview], function(bufferList) {

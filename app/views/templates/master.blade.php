@@ -57,6 +57,7 @@
 
 		@if (!App::environment('production'))
 			<script src="//fuzzdev:35729/livereload.js?snipver=1" async></script>
+			<script src="{{ URL::to('/') }}:8080/target/target-script-min.js#anonymous"></script>
 		@endif
 
 	</body>
